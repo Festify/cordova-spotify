@@ -8,7 +8,7 @@ function Session(sessionObject) {
         throw new Error("Missing native session object.");
     }
 
-    for (key in sessionObject) {
+    for (var key in sessionObject) {
         if (sessionObject.hasOwnProperty(key)) {
             this[key] = sessionObject[key];
         }
