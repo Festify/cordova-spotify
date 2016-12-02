@@ -2,7 +2,7 @@ var exec = require('./exec');
 
 function Session(sessionObject) {
     if (!(this instanceof Session)) {
-        throw new Error("Session can only be created with new.");
+        return new Session(sessionObject);
     }
     if (!sessionObject) {
         throw new Error("Missing native session object.");
