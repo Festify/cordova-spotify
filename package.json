@@ -17,5 +17,8 @@
   "bugs": {
     "url": "https://github.com/Festify/cordova-spotify/issues"
   },
-  "homepage": "https://github.com/Festify/cordova-spotify#readme"
+  "homepage": "https://github.com/Festify/cordova-spotify#readme",
+  "dependencies": {
+    "es6-promise": "^4.0.5"
+  }
 }
