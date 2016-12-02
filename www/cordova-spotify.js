@@ -1,6 +1,6 @@
 var _exec = require('cordova/exec');
 
-function exec(className, methodName, callback) {
+function exec(className, methodName, args, callback) {
     if (!methodName || !className) {
         throw new Error("Missing method or class name argument (1st).");
     }
@@ -13,7 +13,7 @@ function exec(className, methodName, callback) {
         if (callback) {
             callback(err);
         }
-    }, className, methodName);
+    }, className, methodName, args);
 }
 
 exports.coolMethod = function(callback) {
