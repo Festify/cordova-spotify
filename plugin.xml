@@ -1,0 +1,18 @@
+<?xml version='1.0' encoding='utf-8'?>
+<plugin id="rocks.festify.cordova-spotify" version="1.0" xmlns="http://apache.org/cordova/ns/plugins/1.0" xmlns:android="http://schemas.android.com/apk/res/android">
+    <name>cordova-spotify</name>
+    <js-module name="cordova-spotify" src="www/cordova-spotify.js">
+        <clobbers target="cordova.plugins.spotify" />
+    </js-module>
+
+    <platform name="ios">
+        <config-file target="config.xml" parent="/*">
+            <feature name="SpotifyConnector">
+                <param name="ios-package" value="CordovaSpotify" />
+            </feature>
+        </config-file>
+
+        <header-file src="src/ios/CordovaSpotify.h" />
+        <source-file src="src/ios/CordovaSpotify.m" />
+    </platform>
+</plugin>
