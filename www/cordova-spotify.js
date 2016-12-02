@@ -1,19 +1,21 @@
 var _exec = require('cordova/exec');
-var Promise = require('es6-promise').Promise;
 
-function exec(methodName, className) {
-    if (!methodName) {
-        throw new Error("Missing method name argument (1st).");
-    }
-    if (!className) {
-        className = "SpotifyConnector";
+function exec(className, methodName, callback) {
+    if (!methodName || !className) {
+        throw new Error("Missing method or class name argument (1st).");
     }
 
-    return new Promise(function (resolve, reject) {
-        _exec(resolve, reject, className, methodName);
-    });
+    _exec(function (res) {
+        if (callback) {
+            callback(null, res);
+        }
+    }, function (err) {
+        if (callback) {
+            callback(err);
+        }
+    }, className, methodName);
 }
 
-exports.coolMethod = function() {
-    return exec("coolMethod");
+exports.coolMethod = function(callback) {
+    return exec("SpotifyConnector", "coolMethod", callback);
 };
