@@ -1,21 +1,46 @@
-var _exec = require('cordova/exec');
+var exec = require('./exec');
 
-function exec(className, methodName, args, callback) {
-    if (!methodName || !className) {
-        throw new Error("Missing method or class name argument (1st).");
+function Session(sessionObject) {
+    if (!(this instanceof Session)) {
+        throw new Error("Session can only be created with new.");
+    }
+    if (!sessionObject) {
+        throw new Error("Missing native session object.");
     }
 
-    _exec(function (res) {
-        if (callback) {
-            callback(null, res);
+    for (key in sessionObject) {
+        if (sessionObject.hasOwnProperty(key)) {
+            this[key] = sessionObject[key];
         }
-    }, function (err) {
-        if (callback) {
-            callback(err);
-        }
-    }, className, methodName, args);
+    }
 }
 
-exports.coolMethod = function(input, callback) {
-    return exec("SpotifyConnector", "coolMethod", [input], callback);
+Session.prototype.logout = function (callback) {
+    exec("SpotifyConnector", "logout", [], callback);
+};
+
+Session.prototype.play = function (trackLink, callback) {
+    exec("SpotifyConnector", "play", [trackLink], callback);
+};
+
+Session.prototype.pause = function (callback) {
+    exec("SpotifyConnector", "pause", [], callback);
+};
+
+Session.prototype.skip = function (callback) {
+    exec("SpotifyConnector", "skip", [], callback);
+};
+
+Session.prototype.setVolume = function (volume, callback) {
+    exec("SpotifyConnector", "setVolume", [volume], callback);
+};
+
+exports.authenticate = function (urlScheme, clientId, scopes, callback) {
+    if (!urlScheme || !clientId || !scopes) {
+        throw new Error("Missing urlScheme or clientId parameter.");
+    }
+
+    exec("SpotifyConnector", "authenticate", [urlScheme, clientId, scopes], function (err, sess) {
+        callback(err, !err ? new Session(sess) : null);
+    });
 };
