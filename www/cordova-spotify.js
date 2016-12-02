@@ -15,5 +15,5 @@ function exec(methodName, className) {
 }
 
 exports.coolMethod = function() {
-    exec("coolMethod");
+    return exec("coolMethod");
 };
