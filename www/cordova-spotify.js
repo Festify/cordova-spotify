@@ -16,6 +16,6 @@ function exec(className, methodName, args, callback) {
     }, className, methodName, args);
 }
 
-exports.coolMethod = function(callback) {
-    return exec("SpotifyConnector", "coolMethod", callback);
+exports.coolMethod = function(input, callback) {
+    return exec("SpotifyConnector", "coolMethod", [input], callback);
 };

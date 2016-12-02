@@ -3,9 +3,11 @@
 
 @implementation CordovaSpotify
 - (void) coolMethod:(CDVInvokedUrlCommand*)command {
+    NSString* input = [command.arguments objectAtIndex:0];
+
     CDVPluginResult* pluginResult = [CDVPluginResult
                                      resultWithStatus: CDVCommandStatus_OK
-                                     messageAsString: @"Hello World!"];
+                                     messageAsString: input];
 
     [self.commandDelegate
      sendPluginResult: pluginResult
