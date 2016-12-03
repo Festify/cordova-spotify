@@ -30,7 +30,7 @@ NSDictionary *sessionToDict(SPTSession* session) {
         SPTAuthCallback cb = ^(NSError* err, SPTSession* session) {
             CDVPluginResult* pluginResult;
 
-            if(err == nil) {
+            if (err == nil) {
                 pluginResult = [CDVPluginResult
                         resultWithStatus: CDVCommandStatus_OK
                          messageAsDictionary: sessionToDict(session)];
@@ -59,9 +59,9 @@ NSDictionary *sessionToDict(SPTSession* session) {
                 addObserverForName: CDVPluginHandleOpenURLNotification
                             object: nil
                              queue: nil
-                        usingBlock: ^(NSNotification* note){
+                        usingBlock: ^(NSNotification* note) {
                             NSURL* url = [note object];
-                            if([[SPTAuth defaultInstance] canHandleURL: url]) {
+                            if ([[SPTAuth defaultInstance] canHandleURL: url]) {
                                 [authViewController.presentingViewController
                                         dismissViewControllerAnimated: YES
                                                            completion: nil];
