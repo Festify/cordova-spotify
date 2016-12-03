@@ -16,5 +16,10 @@
 
         <header-file src="src/ios/CordovaSpotify.h" />
         <source-file src="src/ios/CordovaSpotify.m" />
+
+        <framework src="src/ios/ios-sdk-master/SpotifyAudioPlayback.framework" custom="true" />
+        <framework src="src/ios/ios-sdk-master/SpotifyAuthentication.framework" custom="true" />
+        <framework src="src/ios/ios-sdk-master/SpotifyMetadata.framework" custom="true" />
+        <framework src="AVFoundation.framework" />
     </platform>
 </plugin>
