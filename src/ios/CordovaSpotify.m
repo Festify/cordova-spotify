@@ -106,8 +106,12 @@ NSDictionary *sessionToDict(SPTSession* session) {
 }
 
 - (void) setVolume:(CDVInvokedUrlCommand*)command {
-    [self.player setVolume: [[command.arguments objectAtIndex: 0] doubleValue] callback: ^(NSError* error) {
-        [self sendResultForCommand: command withError: error andSuccess:@""];
+    double volume = [[command.arguments objectAtIndex: 0] doubleValue];
+
+    __weak CordovaSpotify* _self = self;
+
+    [self.player setVolume: volume callback: ^(NSError* error) {
+        [_self sendResultForCommand: command withError: error andSuccess:@""];
     }];
 }
 
