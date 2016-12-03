@@ -8,7 +8,6 @@
 
 @interface CordovaSpotify : CDVPlugin <SPTAudioStreamingDelegate>
 
-@property (nonatomic) NSString* currentCallbackId;
 @property (nonatomic) bool isLoggedIn;
 @property (nonatomic, strong) SPTSession* session;
 @property (nonatomic, strong) SPTAudioStreamingController* player;
@@ -19,7 +18,7 @@
 - (void) play:(CDVInvokedUrlCommand*)command;
 - (void) setVolume:(CDVInvokedUrlCommand*)command;
 
-- (void) sendResultWithError:(NSError*)err andSuccess:(NSString*)success;
+- (void) sendResultForCommand:(CDVInvokedUrlCommand*)cmd withError:(NSError*)err andSuccess:(NSString*)success;
 @end
 
 #endif /* CordovaSpotify_h */
