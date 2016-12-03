@@ -25,6 +25,7 @@ NSDictionary *sessionToDict(SPTSession* session) {
 }
 
 - (void) authenticate:(CDVInvokedUrlCommand*)command {
+    self.currentCallbackId = command.callbackId;
     NSString* urlScheme = [command.arguments objectAtIndex:0];
     NSString* clientId  = [command.arguments objectAtIndex:1];
     NSArray* scopes     = [command.arguments objectAtIndex:2];
@@ -82,9 +83,11 @@ NSDictionary *sessionToDict(SPTSession* session) {
 }
 
 - (void) play:(CDVInvokedUrlCommand*)command {
+    self.currentCallbackId = command.callbackId;
+
     __weak CordovaSpotify* _self = self;
     SPTErrorableOperationCallback cb = ^(NSError* err) {
-        [_self sendResultForCommand:command withError:err andSuccess:nil];
+        [_self sendResultWithError:err andSuccess:nil];
     };
 
     // If we're called with a Spotify link, play it, otherwise
@@ -97,21 +100,24 @@ NSDictionary *sessionToDict(SPTSession* session) {
     }
 }
 
-- (void) pause:(CDVInvokedUrlCommand*)commmand {
+- (void) pause:(CDVInvokedUrlCommand*)command {
+    self.currentCallbackId = command.callbackId;
+
     __weak CordovaSpotify* _self = self;
 
     [self.player setIsPlaying: NO callback: ^(NSError* err) {
-        [_self sendResultForCommand:commmand withError:err andSuccess:nil];
+        [_self sendResultWithError:err andSuccess:nil];
     }];
 }
 
 - (void) setVolume:(CDVInvokedUrlCommand*)command {
+    self.currentCallbackId = command.callbackId;
     double volume = [[command.arguments objectAtIndex: 0] doubleValue];
 
     __weak CordovaSpotify* _self = self;
 
     [self.player setVolume: volume callback: ^(NSError* error) {
-        [_self sendResultForCommand: command withError: error andSuccess:@""];
+        [_self sendResultWithError: error andSuccess:@""];
     }];
 }
 
@@ -123,7 +129,7 @@ NSDictionary *sessionToDict(SPTSession* session) {
     self.isLoggedIn = NO;
 }
 
-- (void) sendResultForCommand:(CDVInvokedUrlCommand*)cmd withError:(NSError*) err andSuccess:(NSString*) success {
+- (void) sendResultWithError:(NSError*) err andSuccess:(NSString*) success {
     CDVPluginResult *result;
 
     if (err == nil) {
@@ -136,6 +142,6 @@ NSDictionary *sessionToDict(SPTSession* session) {
                  messageAsString: err.localizedDescription];
     }
 
-    [self.commandDelegate sendPluginResult: result callbackId: cmd.callbackId];
+    [self.commandDelegate sendPluginResult: result callbackId: self.currentCallbackId];
 }
 @end
