@@ -43,10 +43,6 @@ Session.prototype.pause = function (callback) {
     exec("SpotifyConnector", "pause", [], callback);
 };
 
-Session.prototype.skip = function (callback) {
-    exec("SpotifyConnector", "skip", [], callback);
-};
-
 Session.prototype.setVolume = function (volume, callback) {
     exec("SpotifyConnector", "setVolume", [volume], callback);
 };
