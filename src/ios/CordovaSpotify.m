@@ -105,6 +105,12 @@ NSDictionary *sessionToDict(SPTSession* session) {
     }];
 }
 
+- (void) setVolume:(CDVInvokedUrlCommand*)command {
+    [self.player setVolume: [[command.arguments objectAtIndex: 0] doubleValue] callback: ^(NSError* error) {
+        [self sendResultForCommand: command withError: error andSuccess:@""];
+    }];
+}
+
 - (void) audioStreamingDidLogin:(SPTAudioStreamingController *)audioStreaming {
     self.isLoggedIn = YES;
 }
