@@ -14,6 +14,7 @@
 #import <SafariServices/SafariServices.h>
 
 @interface CordovaSpotify : CDVPlugin
+@property (nonatomic, strong) SPTSession *session;
 - (void) authenticate:(CDVInvokedUrlCommand*)command;
 @end
 

@@ -11,8 +11,6 @@ NSString *dateToString(NSDate* date) {
 NSDictionary *sessionToDict(SPTSession* session) {
     return @{
             @"canonicalUsername": [session canonicalUsername],
-            @"encryptedRefreshToken": ([session encryptedRefreshToken] == nil) ?[NSNull null] : [session encryptedRefreshToken],
-            @"accessToken": [session accessToken],
             @"tokenType": [session tokenType],
             @"expirationDate": dateToString([session expirationDate])
     };
@@ -27,13 +25,14 @@ NSDictionary *sessionToDict(SPTSession* session) {
     __weak CordovaSpotify* _self = self;
 
     [self.commandDelegate runInBackground:^{
-        SPTAuthCallback cb = ^(NSError* err, SPTSession* session) {
+        SPTAuthCallback cb = ^(NSError* err, SPTSession* spotSession) {
             CDVPluginResult* pluginResult;
 
             if (err == nil) {
+                _self.session = spotSession;
                 pluginResult = [CDVPluginResult
                         resultWithStatus: CDVCommandStatus_OK
-                         messageAsDictionary: sessionToDict(session)];
+                         messageAsDictionary: sessionToDict(spotSession)];
             } else {
                 pluginResult = [CDVPluginResult
                         resultWithStatus: CDVCommandStatus_ERROR
