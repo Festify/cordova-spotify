@@ -71,8 +71,7 @@ NSDictionary *sessionToDict(SPTSession* session) {
                             [authViewController.presentingViewController
                                     dismissViewControllerAnimated: YES
                                                        completion: nil];
-                            [[NSNotificationCenter defaultCenter]
-                                    removeObserver: observer];
+                            [[NSNotificationCenter defaultCenter] removeObserver: observer];
                             return [[SPTAuth defaultInstance]
                                     handleAuthCallbackWithTriggeredAuthURL: url
                                                                   callback: cb];
@@ -83,26 +82,26 @@ NSDictionary *sessionToDict(SPTSession* session) {
 }
 
 - (void) play:(CDVInvokedUrlCommand*)command {
-    NSString* url = [command.arguments objectAtIndex:0];
-
     __weak CordovaSpotify* _self = self;
-    [self.player playSpotifyURI: url
-              startingWithIndex: 0
-           startingWithPosition: 0
-                       callback: ^(NSError *err) {
-        CDVPluginResult* res;
+    SPTErrorableOperationCallback cb = ^(NSError* err) {
+        [_self sendResultForCommand:command withError:err andSuccess:nil];
+    };
 
-        if (err == nil) {
-            res = [CDVPluginResult
-                    resultWithStatus: CDVCommandStatus_OK
-                     messageAsString: url];
-        } else {
-            res = [CDVPluginResult
-                    resultWithStatus: CDVCommandStatus_ERROR
-                     messageAsString: err.localizedDescription];
-        }
+    // If we're called with a Spotify link, play it, otherwise
+    // just resume playback of the current track.
+    if ([command.arguments count] > 0 && [[command.arguments objectAtIndex:0] isKindOfClass: [NSString class]]) {
+        NSString* url = [command.arguments objectAtIndex:0];
+        [self.player playSpotifyURI: url startingWithIndex: 0 startingWithPosition: 0 callback: cb];
+    } else {
+        [self.player setIsPlaying: YES callback: cb];
+    }
+}
 
-        [_self.commandDelegate sendPluginResult: res callbackId: command.callbackId];
+- (void) pause:(CDVInvokedUrlCommand*)commmand {
+    __weak CordovaSpotify* _self = self;
+
+    [self.player setIsPlaying: NO callback: ^(NSError* err) {
+        [_self sendResultForCommand:commmand withError:err andSuccess:nil];
     }];
 }
 
@@ -112,5 +111,21 @@ NSDictionary *sessionToDict(SPTSession* session) {
 
 - (void) audioStreamingDidLogout:(SPTAudioStreamingController *)audioStreaming {
     self.isLoggedIn = NO;
+}
+
+- (void) sendResultForCommand:(CDVInvokedUrlCommand*)cmd withError:(NSError*) err andSuccess:(NSString*) success {
+    CDVPluginResult *result;
+
+    if (err == nil) {
+        result = [CDVPluginResult
+                resultWithStatus: CDVCommandStatus_OK
+                 messageAsString: success];
+    } else {
+        result = [CDVPluginResult
+                resultWithStatus: CDVCommandStatus_ERROR
+                 messageAsString: err.localizedDescription];
+    }
+
+    [self.commandDelegate sendPluginResult: result callbackId: cmd.callbackId];
 }
 @end
