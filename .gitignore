@@ -93,3 +93,9 @@ jspm_packages
 
 # SpotifySDK
 src/ios/ios-sdk-master
+
+# Serverless
+.serverless/
+
+# env config
+.env
