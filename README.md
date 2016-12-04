@@ -1,6 +1,6 @@
 # Cordova Spotify SDK Plugin (Alpha)
 
-Note: *This is iOS only at the moment, but Android is on the Roadmap*
+Note: _This is iOS only at the moment, but Android is on the Roadmap_
 
 ## OAuth Code Grant Flow
 
