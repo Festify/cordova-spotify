@@ -11,6 +11,8 @@ NSString *dateToString(NSDate* date) {
 NSDictionary *sessionToDict(SPTSession* session) {
     return @{
             @"canonicalUsername": [session canonicalUsername],
+            @"encryptedRefreshToken": ([session encryptedRefreshToken] == nil) ?[NSNull null] : [session encryptedRefreshToken],
+            @"accessToken": [session accessToken],
             @"tokenType": [session tokenType],
             @"expirationDate": dateToString([session expirationDate])
     };
@@ -57,6 +59,15 @@ NSDictionary *sessionToDict(SPTSession* session) {
     auth.redirectURL = [NSURL URLWithString: [NSString stringWithFormat:@"%@://callback", urlScheme]];
     auth.sessionUserDefaultsKey = @"FestifySession";
     auth.requestedScopes = scopes;
+
+    if([command.arguments count] >= 5 &&
+            [[command.arguments objectAtIndex: 3] isKindOfClass: [NSString class]] &&
+            [[command.arguments objectAtIndex: 4] isKindOfClass: [NSString class]]) {
+        NSString* tokenSwapURL = [command.arguments objectAtIndex: 3];
+        auth.tokenSwapURL = [NSURL URLWithString: tokenSwapURL];
+        NSString* tokenRefreshURL = [command.arguments objectAtIndex: 4];
+        auth.tokenRefreshURL = [NSURL URLWithString: tokenRefreshURL];
+    }
 
     NSURL *authUrl = [auth spotifyWebAuthenticationURL];
     SFSafariViewController* authViewController = [[SFSafariViewController alloc] initWithURL:authUrl];

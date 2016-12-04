@@ -47,12 +47,17 @@ Session.prototype.setVolume = function (volume, callback) {
     exec("SpotifyConnector", "setVolume", [volume], callback);
 };
 
-exports.authenticate = function (urlScheme, clientId, scopes, callback) {
-    if (!urlScheme || !clientId || !scopes) {
+exports.authenticate = function (options, callback) {
+    if (!options.urlScheme || !options.clientId || !options.scopes) {
         throw new Error("Missing urlScheme or clientId parameter.");
     }
 
-    exec("SpotifyConnector", "authenticate", [urlScheme, clientId, scopes], function (err, sess) {
+    var args = [options.urlScheme, options.clientId, options.scopes];
+    if(options.tokenSwapURL && options.tokenRefreshURL) {
+        args = args.concat([options.tokenSwapURL, options.tokenRefreshURL]);
+    }
+
+    exec("SpotifyConnector", "authenticate", args, function (err, sess) {
         callback(err, !err ? new Session(sess) : null);
     });
 };
