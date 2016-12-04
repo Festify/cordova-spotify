@@ -60,9 +60,9 @@ NSDictionary *sessionToDict(SPTSession* session) {
     auth.sessionUserDefaultsKey = @"FestifySession";
     auth.requestedScopes = scopes;
 
-    if([command.arguments count] >= 5 &&
-            [[command.arguments objectAtIndex: 3] isKindOfClass: [NSString class]] &&
-            [[command.arguments objectAtIndex: 4] isKindOfClass: [NSString class]]) {
+    if ([command.arguments count] >= 5 &&
+        [[command.arguments objectAtIndex: 3] isKindOfClass: [NSString class]] &&
+        [[command.arguments objectAtIndex: 4] isKindOfClass: [NSString class]]) {
         NSString* tokenSwapURL = [command.arguments objectAtIndex: 3];
         auth.tokenSwapURL = [NSURL URLWithString: tokenSwapURL];
         NSString* tokenRefreshURL = [command.arguments objectAtIndex: 4];
