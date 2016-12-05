@@ -69,8 +69,10 @@ NSDictionary *sessionToDict(SPTSession* session) {
         auth.tokenRefreshURL = [NSURL URLWithString: tokenRefreshURL];
     }
 
-    NSURL *authUrl = [auth spotifyWebAuthenticationURL];
-    SFSafariViewController* authViewController = [[SFSafariViewController alloc] initWithURL:authUrl];
+    NSURL *authUrl = [auth supportsApplicationAuthentication] ?
+        [auth spotifyAppAuthenticationURL] :
+        [auth spotifyWebAuthenticationURL];
+    SFSafariViewController* authViewController = [[SFSafariViewController alloc] initWithURL: authUrl];
 
     __block id observer = [[NSNotificationCenter defaultCenter]
             addObserverForName: CDVPluginHandleOpenURLNotification
