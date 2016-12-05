@@ -1,11 +1,11 @@
 var _exec = require('cordova/exec');
 
-var exec = function(className, methodName, args, callback) {
-    if (!methodName || !className) {
+function exec(methodName, args, callback) {
+    if (!methodName) {
         throw new Error("Missing method or class name argument (1st).");
     }
 
-    _exec(function (res) {
+    return _exec(function (res) {
         if (callback) {
             callback(null, res);
         }
@@ -13,8 +13,8 @@ var exec = function(className, methodName, args, callback) {
         if (callback) {
             callback(err);
         }
-    }, className, methodName, args);
-};
+    }, 'SpotifyConnector', methodName, args);
+}
 
 function Session(sessionObject) {
     if (!(this instanceof Session)) {
@@ -32,32 +32,32 @@ function Session(sessionObject) {
 }
 
 Session.prototype.logout = function (callback) {
-    exec("SpotifyConnector", "logout", [], callback);
+    exec('logout', [], callback);
 };
 
 Session.prototype.play = function (trackLink, callback) {
-    exec("SpotifyConnector", "play", [trackLink], callback);
+    exec('play', [trackLink], callback);
 };
 
 Session.prototype.pause = function (callback) {
-    exec("SpotifyConnector", "pause", [], callback);
+    exec('pause', [], callback);
 };
 
 Session.prototype.setVolume = function (volume, callback) {
-    exec("SpotifyConnector", "setVolume", [volume], callback);
+    exec('setVolume', [volume], callback);
 };
 
 exports.authenticate = function (options, callback) {
     if (!options.urlScheme || !options.clientId || !options.scopes) {
-        throw new Error("Missing urlScheme or clientId parameter.");
+        throw new Error("Missing urlScheme, scopes or clientId parameter.");
     }
 
     var args = [options.urlScheme, options.clientId, options.scopes];
-    if(options.tokenSwapURL && options.tokenRefreshURL) {
-        args = args.concat([options.tokenSwapURL, options.tokenRefreshURL]);
+    if (options.tokenSwapUrl && options.tokenRefreshUrl) {
+        args = args.concat([options.tokenSwapUrl, options.tokenRefreshUrl]);
     }
 
-    exec("SpotifyConnector", "authenticate", args, function (err, sess) {
+    exec('authenticate', args, function (err, sess) {
         callback(err, !err ? new Session(sess) : null);
     });
 };
