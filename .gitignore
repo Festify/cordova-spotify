@@ -75,7 +75,7 @@ jspm_packages
 .yarn-integrity
 
 # SpotifySDK
-src/ios/ios-sdk-master
+src/ios/spotify-sdk
 
 # Serverless
 .serverless/
