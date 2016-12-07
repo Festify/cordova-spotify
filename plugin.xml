@@ -5,6 +5,24 @@
         <clobbers target="cordova.plugins.spotify" />
     </js-module>
 
+    <platform name="android">
+        <hook type="before_plugin_install" src="install-android.sh" />
+
+        <config-file target="config.xml" parent="/*">
+            <feature name="SpotifyConnector">
+                <param name="android-package" value="CordovaSpotify" />
+            </feature>
+        </config-file>
+
+        <source-file src="src/android/CordovaSpotify.java" target-dir="src/rocks/festify" />
+
+        <!--
+            Because Cordova doesn't like linking to AARs, we do some black magic
+            gradle trickery to link against the file.
+         -->
+        <resource-file src="src/android/spotify-sdk/spotify-player-24-noconnect-2.20b.aar" target="libs/spotify-sdk.aar" />
+        <framework src="src/android/spotify-auth/auth-lib/build.gradle" custom="true" type="gradleReference" />
+    </platform>
     <platform name="ios">
         <hook type="before_plugin_install" src="install-ios.sh" />
 
