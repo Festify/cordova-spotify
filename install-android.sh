@@ -7,5 +7,6 @@ SDK_DOWNLOAD_PATH="https://github.com/spotify/android-sdk/archive/24-noconnect-2
 
 mkdir -p $AUTH_INSTALL_PATH
 mkdir -p $SDK_INSTALL_PATH
-curl -LsS $AUTH_DOWNLOAD_PATH | tar -xzv -C $AUTH_INSTALL_PATH --strip 1
-curl -LsS $SDK_DOWNLOAD_PATH | tar -xzv -C $SDK_INSTALL_PATH --strip 1
+curl -LsS $AUTH_DOWNLOAD_PATH | tar -xz -C $AUTH_INSTALL_PATH --strip 1
+curl -LsS $SDK_DOWNLOAD_PATH | tar -xz -C $SDK_INSTALL_PATH --strip 1
+echo "Android install successful."
