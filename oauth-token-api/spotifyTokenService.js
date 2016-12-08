@@ -21,12 +21,7 @@ const spotifyRequest = params => {
             headers: {
                 "Authorization": "Basic " + new Buffer(CLIENT_ID + ":" + CLIENT_SECRET).toString('base64')
             }
-        }, (err, resp) => {
-            if(err) {
-                reject(err);
-            }
-            resolve(resp);
-        });
+        }, (err, resp) => err ? reject(err) : resolve(resp));
     })
         .then(resp => {
             if(resp.statusCode != 200) {
