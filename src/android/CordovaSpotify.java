@@ -47,9 +47,19 @@ public class CordovaSpotify extends CordovaPlugin
         } else if(action.equals("initSession")) {
             String accessToken = args.getString(0);
             this.initSession(callbackContext, accessToken);
+            return true;
+        } else if(action.equals("play")) {
+            String trackUri = args.getString(0);
+            this.play(callbackContext, trackUri);
+            return true;
+        } else {
+            return false;
         }
-        return false;
     }
+
+    /*
+     * API Functions
+     */
 
     private void authenticate(CallbackContext callbackContext, String clientId, String urlScheme) {
         this.loginState = new LoginState(callbackContext, clientId);
@@ -70,6 +80,7 @@ public class CordovaSpotify extends CordovaPlugin
     private void initSession(final CallbackContext callbackContext, String accessToken) {
         if(this.clientId == null || this.clientId.length() < 1) {
             callbackContext.error("Invalid clientId. Call authenticate first!");
+            return;
         }
 
         Config playerConfig = new Config(
@@ -98,6 +109,36 @@ public class CordovaSpotify extends CordovaPlugin
             }
         );
     }
+
+    private void play(final CallbackContext callbackContext, String trackUri) {
+        SpotifyPlayer player = this.player;
+
+        if(trackUri == null || trackUri.length() < 1) {
+            callbackContext.error("Invalid trackUri");
+            return;
+        }
+
+        if(player == null) {
+            callbackContext.error("Invalid player. Please call initSession first!");
+            return;
+        }
+
+        player.playUri(new Player.OperationCallback() {
+            @Override
+            public void onSuccess() {
+                callbackContext.success("Success");
+            }
+
+            @Override
+            public void onError(Error error) {
+                callbackContext.error("Playing of track failed: " + error.toString());
+            }
+        }, trackUri, 0, 0);
+    }
+
+    /*
+     * CALLBACKS
+     */
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent intent) {

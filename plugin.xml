@@ -4,10 +4,9 @@
 
     <hook type="before_plugin_install" src="package.sh" />
 
-    <js-module name="cordova-spotify" src="www/cordova-spotify.js">
-        <clobbers target="cordova.plugins.spotify" />
+    <js-module name="cordova-spotify" src="www/build/cordova-spotify.js">
+        <clobbers target="cordova.plugins" />
     </js-module>
-    <asset src="www/node_modules" target="../cordova/node_modules" />
 
     <platform name="android">
         <hook type="before_plugin_install" src="install-android.sh" />
@@ -42,7 +41,7 @@
     </platform>
 
     <platform name="ios">
-        <!--hook type="before_plugin_install" src="install-ios.sh" /-->
+        <hook type="before_plugin_install" src="install-ios.sh" />
 
         <config-file target="config.xml" parent="/*">
             <feature name="SpotifyConnector">

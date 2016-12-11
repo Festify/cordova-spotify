@@ -1,10 +1,10 @@
 require('es6-promise/auto');
 require('isomorphic-fetch');
+const qs = require('qs');
 
-var _exec = require('cordova').exec;
+var _exec = cordova.exec;
 
 var SPOTIFY_WEB_API = "https://api.spotify.com/v1";
-var TOKEN_SERVICE_URL = process.env.TOKEN_SERVICE_URL;
 
 function decode(msg) {
     return function (response) {
@@ -64,12 +64,12 @@ exports.authenticate = function (options) {
         throw new Error("Missing tokenSwapUrl or tokenRefreshUrl parameter.");
     }
 
-    exec('authenticate', [options.urlScheme, options.clientId, options.scopes])
+    return exec('authenticate', [options.urlScheme, options.clientId, options.scopes])
         .then(function (res) {
             return fetch(options.tokenSwapUrl, {
-                body: {
+                body: qs.stringify({
                     code: res.code
-                },
+                }),
                 method: 'POST'
             }).then(decode("Token service did not return a successful response code."));
         })
