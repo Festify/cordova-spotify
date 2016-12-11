@@ -1,7 +1,11 @@
-const exec = require('../lib/execPromise.js');
-const qs = require('qs');
+require('es6-promise/auto');
+require('isomorphic-fetch');
 
-mod = {};
+const qs = require('qs');
+const exec = require('../lib/execPromise.js');
+const conf = require('../lib/const.js');
+
+var mod = {};
 
 function decode(msg) {
     return function (response) {
@@ -27,7 +31,7 @@ mod.authenticate = function(options) {
             }).then(decode("Token service did not return a successful response code."));
         })
         .then(function (authData) {
-            return fetch(SPOTIFY_WEB_API + '/me', {
+            return fetch(conf.SPOTIFY_WEB_API + '/me', {
                 headers: {
                     "Authorization": "Bearer " + authData.access_token
                 }

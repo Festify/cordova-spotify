@@ -1,3 +1,5 @@
+require('es6-promise/auto');
+
 const _exec = cordova.exec;
 
 module.exports = function (methodName, args) {

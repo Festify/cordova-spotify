@@ -1,11 +1,8 @@
 require('es6-promise/auto');
-require('isomorphic-fetch');
 
 const platform = require('./platforms');
 const exec = require('./lib/execPromise.js');
-
-const SPOTIFY_WEB_API = "https://api.spotify.com/v1";
-
+const conf = require('./lib/const.js');
 
 function Session(sessionObject) {
     if (!(this instanceof Session)) {

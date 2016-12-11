@@ -1,6 +1,6 @@
 const exec = require('../lib/execPromise.js');
 
-mod = {};
+var mod = {};
 
 mod.authenticate = function(options) {
     return exec('authenticate', [
