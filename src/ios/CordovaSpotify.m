@@ -11,7 +11,7 @@ NSString *dateToString(NSDate* date) {
 NSDictionary *sessionToDict(SPTSession* session) {
     return @{
             @"canonicalUsername": [session canonicalUsername],
-            @"encryptedRefreshToken": ([session encryptedRefreshToken] == nil) ?[NSNull null] : [session encryptedRefreshToken],
+            @"encryptedRefreshToken": ([session encryptedRefreshToken] == nil) ? [NSNull null] : [session encryptedRefreshToken],
             @"accessToken": [session accessToken],
             @"tokenType": [session tokenType],
             @"expirationDate": dateToString([session expirationDate])
