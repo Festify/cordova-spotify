@@ -52,10 +52,6 @@ Session.prototype.pause = function () {
     return exec('pause', []);
 };
 
-Session.prototype.setVolume = function (volume) {
-    return exec('setVolume', [volume]);
-};
-
 exports.authenticate = function (options) {
     if (!options.urlScheme || !options.clientId || !options.scopes) {
         throw new Error("Missing urlScheme, scopes or clientId parameter.");

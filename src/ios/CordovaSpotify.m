@@ -116,16 +116,6 @@ NSDictionary *sessionToDict(SPTSession* session) {
     }];
 }
 
-- (void) setVolume:(CDVInvokedUrlCommand*)command {
-    double volume = [[command.arguments objectAtIndex: 0] doubleValue];
-
-    __weak CordovaSpotify* _self = self;
-
-    [self.player setVolume: volume callback: ^(NSError* error) {
-        [_self sendResultForCommand: command withError: error andSuccess:@""];
-    }];
-}
-
 - (void) audioStreamingDidLogin:(SPTAudioStreamingController *)audioStreaming {
     self.isLoggedIn = YES;
 }
