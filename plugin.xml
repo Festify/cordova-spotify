@@ -2,14 +2,12 @@
 <plugin id="rocks.festify.cordova-spotify" version="1.0" xmlns="http://apache.org/cordova/ns/plugins/1.0" xmlns:android="http://schemas.android.com/apk/res/android">
     <name>cordova-spotify</name>
 
-    <hook type="before_plugin_install" src="install-node.sh" />
+    <hook type="before_plugin_install" src="package.sh" />
 
     <js-module name="cordova-spotify" src="www/cordova-spotify.js">
         <clobbers target="cordova.plugins.spotify" />
     </js-module>
-    <asset src="www/node_modules" target="node_modules" />
-    <asset src="www/.env" target=".env" />
-    <asset src="www/package.json" target="package.json" />
+    <asset src="www/node_modules" target="../cordova/node_modules" />
 
     <platform name="android">
         <hook type="before_plugin_install" src="install-android.sh" />
@@ -21,16 +19,25 @@
             </feature>
         </config-file>
 
+        <config-file target="AndroidManifest.xml" parent="/manifest/application">
+            <activity
+                android:name="com.spotify.sdk.android.authentication.LoginActivity"
+                android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+        </config-file>
+
         <source-file src="src/android/CordovaSpotify.java" target-dir="src/rocks/festify" />
+        <source-file src="src/android/LoginState.java" target-dir="src/rocks/festify" />
 
         <!--
             Because Cordova doesn't like linking to AARs, we do some black magic
             gradle trickery to link against the file.
          -->
         <framework src="src/android/build.gradle" custom="true" type="gradleReference" />
-        <resource-file src="src/android/spotify-sdk/spotify-player-24-noconnect-2.20b.aar"
+        <resource-file
+            src="src/android/spotify-sdk/spotify-player-24-noconnect-2.20b.aar"
             target="libs/spotify-sdk.aar" />
-        <resource-file src="src/android/spotify-auth/auth-lib/build/outputs/aar/spotify-android-auth-1.0.0.aar"
+        <resource-file
+            src="src/android/spotify-auth/auth-lib/build/outputs/aar/spotify-android-auth-1.0.0.aar"
             target="libs/spotify-auth.aar" />
     </platform>
 

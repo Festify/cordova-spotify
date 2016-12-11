@@ -1,7 +1,7 @@
 require('es6-promise/auto');
 require('isomorphic-fetch');
 
-var _exec = require('cordova/exec');
+var _exec = require('cordova').exec;
 
 var SPOTIFY_WEB_API = "https://api.spotify.com/v1";
 var TOKEN_SERVICE_URL = process.env.TOKEN_SERVICE_URL;
