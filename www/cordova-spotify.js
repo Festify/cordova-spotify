@@ -41,19 +41,19 @@ function Session(sessionObject) {
 }
 
 Session.prototype.logout = function () {
-    exec('logout', []);
+    return exec('logout', []);
 };
 
 Session.prototype.play = function (trackLink) {
-    exec('play', [trackLink]);
+    return exec('play', [trackLink]);
 };
 
 Session.prototype.pause = function () {
-    exec('pause', []);
+    return exec('pause', []);
 };
 
 Session.prototype.setVolume = function (volume) {
-    exec('setVolume', [volume]);
+    return exec('setVolume', [volume]);
 };
 
 exports.authenticate = function (options) {
