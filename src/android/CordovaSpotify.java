@@ -23,6 +23,7 @@ import com.spotify.sdk.android.player.ConnectionStateCallback;
 import com.spotify.sdk.android.player.Error;
 import com.spotify.sdk.android.player.Player;
 import com.spotify.sdk.android.player.PlayerEvent;
+import com.spotify.sdk.android.player.PlaybackState;
 import com.spotify.sdk.android.player.Spotify;
 import com.spotify.sdk.android.player.SpotifyPlayer;
 
@@ -50,8 +51,15 @@ public class CordovaSpotify extends CordovaPlugin
             this.initSession(callbackContext, accessToken);
             return true;
         } else if(action.equals("play")) {
-            String trackUri = args.getString(0);
-            this.play(callbackContext, trackUri);
+            if(!args.isNull(0)) {
+                String trackUri = args.getString(0);
+                this.play(callbackContext, trackUri);
+            } else {
+                this.play(callbackContext);
+            }
+            return true;
+        } else if(action.equals("pause")) {
+            this.pause(callbackContext);
             return true;
         } else {
             return false;
@@ -122,17 +130,39 @@ public class CordovaSpotify extends CordovaPlugin
     private void play(final CallbackContext callbackContext, String trackUri) {
         SpotifyPlayer player = this.player;
 
-        if(trackUri == null || trackUri.length() < 1) {
-            callbackContext.error("Invalid trackUri");
+        if(player == null) {
+            callbackContext.error("Invalid player. Please call initSession first!");
             return;
         }
+
+        if(trackUri != null && trackUri.length() > 0) {
+            player.playUri(new Player.OperationCallback() {
+                @Override
+                public void onSuccess() {
+                    callbackContext.success("Success");
+                }
+
+                @Override
+                public void onError(Error error) {
+                    callbackContext.error("Playing of track failed: " + error.toString());
+                }
+            }, trackUri, 0, 0);
+        } else {
+            // resume
+            this.play(callbackContext);
+        }
+    }
+
+    private void play(final CallbackContext callbackContext) {
+        SpotifyPlayer player = this.player;
 
         if(player == null) {
             callbackContext.error("Invalid player. Please call initSession first!");
             return;
         }
 
-        player.playUri(new Player.OperationCallback() {
+        // resume
+        player.resume(new Player.OperationCallback() {
             @Override
             public void onSuccess() {
                 callbackContext.success("Success");
@@ -140,9 +170,31 @@ public class CordovaSpotify extends CordovaPlugin
 
             @Override
             public void onError(Error error) {
-                callbackContext.error("Playing of track failed: " + error.toString());
+                callbackContext.error("Resume failed: " + error.toString());
             }
-        }, trackUri, 0, 0);
+        });
+    }
+
+    private void pause(final CallbackContext callbackContext) {
+        SpotifyPlayer player = this.player;
+
+        PlaybackState state = player.getPlaybackState();
+        if(!state.isPlaying) {
+            callbackContext.success("Not playing");
+            return;
+        }
+
+        player.pause(new Player.OperationCallback() {
+            @Override
+            public void onSuccess() {
+                callbackContext.success("Success");
+            }
+
+            @Override
+            public void onError(Error error) {
+                callbackContext.error("Pausing failed: " + error.toString());
+            }
+        });
     }
 
     /*
