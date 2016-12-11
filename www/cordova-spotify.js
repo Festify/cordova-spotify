@@ -1,19 +1,28 @@
+require('es6-promise/auto');
+require('isomorphic-fetch');
+
 var _exec = require('cordova/exec');
 
-function exec(methodName, args, callback) {
+var SPOTIFY_WEB_API = "https://api.spotify.com/v1";
+var TOKEN_SERVICE_URL = process.env.TOKEN_SERVICE_URL;
+
+function decode(msg) {
+    return function (response) {
+        if (!response.ok) {
+            throw new Error(response.statusText + ": " + msg);
+        }
+        return response.json();
+    };
+}
+
+function exec(methodName, args) {
     if (!methodName) {
         throw new Error("Missing method or class name argument (1st).");
     }
 
-    return _exec(function (res) {
-        if (callback) {
-            callback(null, res);
-        }
-    }, function (err) {
-        if (callback) {
-            callback(err);
-        }
-    }, 'SpotifyConnector', methodName, args);
+    return new Promise(function (resolve, reject) {
+        return _exec(resolve, reject, 'SpotifyConnector', methodName, args);
+    });
 }
 
 function Session(sessionObject) {
@@ -31,33 +40,61 @@ function Session(sessionObject) {
     }
 }
 
-Session.prototype.logout = function (callback) {
-    exec('logout', [], callback);
+Session.prototype.logout = function () {
+    exec('logout', []);
 };
 
-Session.prototype.play = function (trackLink, callback) {
-    exec('play', [trackLink], callback);
+Session.prototype.play = function (trackLink) {
+    exec('play', [trackLink]);
 };
 
-Session.prototype.pause = function (callback) {
-    exec('pause', [], callback);
+Session.prototype.pause = function () {
+    exec('pause', []);
 };
 
-Session.prototype.setVolume = function (volume, callback) {
-    exec('setVolume', [volume], callback);
+Session.prototype.setVolume = function (volume) {
+    exec('setVolume', [volume]);
 };
 
-exports.authenticate = function (options, callback) {
+exports.authenticate = function (options) {
     if (!options.urlScheme || !options.clientId || !options.scopes) {
         throw new Error("Missing urlScheme, scopes or clientId parameter.");
     }
-
-    var args = [options.urlScheme, options.clientId, options.scopes];
-    if (options.tokenSwapUrl && options.tokenRefreshUrl) {
-        args = args.concat([options.tokenSwapUrl, options.tokenRefreshUrl]);
+    if (!options.tokenSwapUrl || !options.tokenRefreshUrl) {
+        throw new Error("Missing tokenSwapUrl or tokenRefreshUrl parameter.");
     }
 
-    exec('authenticate', args, function (err, sess) {
-        callback(err, !err ? new Session(sess) : null);
-    });
+    exec('authenticate', [options.urlScheme, options.clientId, options.scopes])
+        .then(function (res) {
+            return fetch(options.tokenSwapUrl, {
+                body: {
+                    code: res.code
+                },
+                method: 'POST'
+            }).then(decode("Token service did not return a successful response code."));
+        })
+        .then(function (authData) {
+            return fetch(SPOTIFY_WEB_API + '/me', {
+                headers: {
+                    "Authorization": "Bearer " + authData.access_token
+                }
+            })
+            .then(decode("Spotify API did not return a successful response code."))
+            .then(function (me) {
+                authData.user_name = me.id;
+                return authData;
+            });
+        })
+        .then(function (authData) {
+            var expiresAt = Date.now() + (authData.expires_in * 1000);
+            return exec("initSession", [
+                authData.access_token,
+                authData.refresh_token,
+                authData.user_name,
+                expiresAt,
+                options.tokenRefreshUrl
+            ]).then(function () {
+                return new Session(authData);
+            });
+        });
 };

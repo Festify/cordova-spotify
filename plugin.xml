@@ -1,9 +1,15 @@
 <?xml version='1.0' encoding='utf-8'?>
 <plugin id="rocks.festify.cordova-spotify" version="1.0" xmlns="http://apache.org/cordova/ns/plugins/1.0" xmlns:android="http://schemas.android.com/apk/res/android">
     <name>cordova-spotify</name>
+
+    <hook type="before_plugin_install" src="install-node.sh" />
+
     <js-module name="cordova-spotify" src="www/cordova-spotify.js">
         <clobbers target="cordova.plugins.spotify" />
     </js-module>
+    <asset src="www/node_modules" target="node_modules" />
+    <asset src="www/.env" target=".env" />
+    <asset src="www/package.json" target="package.json" />
 
     <platform name="android">
         <hook type="before_plugin_install" src="install-android.sh" />
