@@ -42,7 +42,8 @@ public class CordovaSpotify extends CordovaPlugin
         if (action.equals("authenticate")) {
             String urlScheme = args.getString(0);
             String clientId = args.getString(1);
-            this.authenticate(callbackContext, clientId, urlScheme);
+            JSONArray scopes = args.getJSONArray(2);
+            this.authenticate(callbackContext, clientId, urlScheme, scopes);
             return true;
         } else if(action.equals("initSession")) {
             String accessToken = args.getString(0);
@@ -61,7 +62,7 @@ public class CordovaSpotify extends CordovaPlugin
      * API Functions
      */
 
-    private void authenticate(CallbackContext callbackContext, String clientId, String urlScheme) {
+    private void authenticate(CallbackContext callbackContext, String clientId, String urlScheme, JSONArray jsonScopes) {
         this.loginState = new LoginState(callbackContext, clientId);
         this.clientId = clientId;
 
@@ -70,7 +71,15 @@ public class CordovaSpotify extends CordovaPlugin
             AuthenticationResponse.Type.CODE,
             urlScheme + "://callback"
         );
-        builder.setScopes(new String[]{"user-read-private", "streaming"});
+        String[] scopes = new String[jsonScopes.length()];
+        for(int i=0; i < jsonScopes.length(); i++) {
+            try {
+                scopes[i] = jsonScopes.getString(i);
+            } catch(JSONException e) {
+                callbackContext.error("scopes array could not be parsed");
+            }
+        }
+        builder.setScopes(scopes);
         AuthenticationRequest request = builder.build();
 
         cordova.setActivityResultCallback(this);
