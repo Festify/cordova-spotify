@@ -75,10 +75,15 @@ jspm_packages
 .yarn-integrity
 
 # SpotifySDK
-src/ios/spotify-sdk
+src/ios/spotify-sdk/
+src/android/spotify-auth/
+src/android/spotify-sdk/
 
 # Serverless
 .serverless/
 
 # env config
 .env
+
+# Android
+.gradle/

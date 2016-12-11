@@ -7,10 +7,11 @@
 
     <platform name="android">
         <hook type="before_plugin_install" src="install-android.sh" />
+        <hook type="before_build" src="src/android/build-spotify-auth.sh" />
 
         <config-file target="config.xml" parent="/*">
             <feature name="SpotifyConnector">
-                <param name="android-package" value="CordovaSpotify" />
+                <param name="android-package" value="rocks.festify.CordovaSpotify" />
             </feature>
         </config-file>
 
@@ -20,11 +21,15 @@
             Because Cordova doesn't like linking to AARs, we do some black magic
             gradle trickery to link against the file.
          -->
-        <resource-file src="src/android/spotify-sdk/spotify-player-24-noconnect-2.20b.aar" target="libs/spotify-sdk.aar" />
-        <framework src="src/android/spotify-auth/auth-lib/build.gradle" custom="true" type="gradleReference" />
+        <framework src="src/android/build.gradle" custom="true" type="gradleReference" />
+        <resource-file src="src/android/spotify-sdk/spotify-player-24-noconnect-2.20b.aar"
+            target="libs/spotify-sdk.aar" />
+        <resource-file src="src/android/spotify-auth/auth-lib/build/outputs/aar/spotify-android-auth-1.0.0.aar"
+            target="libs/spotify-auth.aar" />
     </platform>
+
     <platform name="ios">
-        <hook type="before_plugin_install" src="install-ios.sh" />
+        <!--hook type="before_plugin_install" src="install-ios.sh" /-->
 
         <config-file target="config.xml" parent="/*">
             <feature name="SpotifyConnector">
