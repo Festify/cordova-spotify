@@ -71,9 +71,6 @@ public class CordovaSpotify extends CordovaPlugin
      */
 
     private void authenticate(CallbackContext callbackContext, String clientId, String urlScheme, JSONArray jsonScopes) {
-        this.loginState = new LoginState(callbackContext, clientId);
-        this.clientId = clientId;
-
         AuthenticationRequest.Builder builder = new AuthenticationRequest.Builder(
             clientId,
             AuthenticationResponse.Type.CODE,
@@ -85,10 +82,14 @@ public class CordovaSpotify extends CordovaPlugin
                 scopes[i] = jsonScopes.getString(i);
             } catch(JSONException e) {
                 callbackContext.error("scopes array could not be parsed");
+                return;
             }
         }
         builder.setScopes(scopes);
         AuthenticationRequest request = builder.build();
+
+        this.loginState = new LoginState(callbackContext, clientId);
+        this.clientId = clientId;
 
         cordova.setActivityResultCallback(this);
         AuthenticationClient.openLoginActivity(this.cordova.getActivity(), LOGIN_REQUEST_CODE, request);
