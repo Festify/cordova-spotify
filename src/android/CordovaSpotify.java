@@ -31,7 +31,6 @@ import rocks.festify.LoginState;
 
 public class CordovaSpotify extends CordovaPlugin
         implements ConnectionStateCallback, SpotifyPlayer.NotificationCallback {
-
     private static final int LOGIN_REQUEST_CODE = 1337;
 
     private LoginState loginState = null;
@@ -46,19 +45,19 @@ public class CordovaSpotify extends CordovaPlugin
             JSONArray scopes = args.getJSONArray(2);
             this.authenticate(callbackContext, clientId, urlScheme, scopes);
             return true;
-        } else if(action.equals("initSession")) {
+        } else if (action.equals("initSession")) {
             String accessToken = args.getString(0);
             this.initSession(callbackContext, accessToken);
             return true;
-        } else if(action.equals("play")) {
-            if(!args.isNull(0)) {
+        } else if (action.equals("play")) {
+            if (!args.isNull(0)) {
                 String trackUri = args.getString(0);
                 this.play(callbackContext, trackUri);
             } else {
                 this.play(callbackContext);
             }
             return true;
-        } else if(action.equals("pause")) {
+        } else if (action.equals("pause")) {
             this.pause(callbackContext);
             return true;
         } else {
@@ -77,26 +76,25 @@ public class CordovaSpotify extends CordovaPlugin
             urlScheme + "://callback"
         );
         String[] scopes = new String[jsonScopes.length()];
-        for(int i=0; i < jsonScopes.length(); i++) {
+        for (int i = 0; i < jsonScopes.length(); i++) {
             try {
                 scopes[i] = jsonScopes.getString(i);
-            } catch(JSONException e) {
-                callbackContext.error("scopes array could not be parsed");
+            } catch (JSONException e) {
+                callbackContext.error("OAuth scopes array could not be parsed.");
                 return;
             }
         }
         builder.setScopes(scopes);
-        AuthenticationRequest request = builder.build();
 
         this.loginState = new LoginState(callbackContext, clientId);
         this.clientId = clientId;
 
         cordova.setActivityResultCallback(this);
-        AuthenticationClient.openLoginActivity(this.cordova.getActivity(), LOGIN_REQUEST_CODE, request);
+        AuthenticationClient.openLoginActivity(this.cordova.getActivity(), LOGIN_REQUEST_CODE, builder.build());
     }
 
     private void initSession(final CallbackContext callbackContext, String accessToken) {
-        if(this.clientId == null || this.clientId.length() < 1) {
+        if (this.clientId == null || this.clientId.length() < 1) {
             callbackContext.error("Invalid clientId. Call authenticate first!");
             return;
         }
@@ -107,57 +105,26 @@ public class CordovaSpotify extends CordovaPlugin
             this.clientId
         );
 
-        Spotify.getPlayer(
-            playerConfig,
-            this.cordova.getActivity(),
-            new SpotifyPlayer.InitializationObserver() {
-                @Override
-                public void onInitialized(SpotifyPlayer spotifyPlayer) {
-                    CordovaSpotify.this.player = spotifyPlayer;
-                    spotifyPlayer.addConnectionStateCallback(CordovaSpotify.this);
-                    spotifyPlayer.addNotificationCallback(CordovaSpotify.this);
+        Spotify.getPlayer(playerConfig, this.cordova.getActivity(), new SpotifyPlayer.InitializationObserver() {
+            @Override
+            public void onInitialized(SpotifyPlayer spotifyPlayer) {
+                CordovaSpotify.this.player = spotifyPlayer;
+                spotifyPlayer.addConnectionStateCallback(CordovaSpotify.this);
+                spotifyPlayer.addNotificationCallback(CordovaSpotify.this);
 
-                    callbackContext.success("Success");
-                }
-
-                @Override
-                public void onError(Throwable throwable) {
-                    callbackContext.error("Could not initialize player");
-                }
+                callbackContext.success("Success");
             }
-        );
-    }
 
-    private void play(final CallbackContext callbackContext, String trackUri) {
-        SpotifyPlayer player = this.player;
-
-        if(player == null) {
-            callbackContext.error("Invalid player. Please call initSession first!");
-            return;
-        }
-
-        if(trackUri != null && trackUri.length() > 0) {
-            player.playUri(new Player.OperationCallback() {
-                @Override
-                public void onSuccess() {
-                    callbackContext.success("Success");
-                }
-
-                @Override
-                public void onError(Error error) {
-                    callbackContext.error("Playing of track failed: " + error.toString());
-                }
-            }, trackUri, 0, 0);
-        } else {
-            // resume
-            this.play(callbackContext);
-        }
+            @Override
+            public void onError(Throwable throwable) {
+                callbackContext.error("Could not initialize player: " + throwable.toString());
+            }
+        });
     }
 
     private void play(final CallbackContext callbackContext) {
         SpotifyPlayer player = this.player;
-
-        if(player == null) {
+        if (player == null) {
             callbackContext.error("Invalid player. Please call initSession first!");
             return;
         }
@@ -176,11 +143,36 @@ public class CordovaSpotify extends CordovaPlugin
         });
     }
 
+    private void play(final CallbackContext callbackContext, String trackUri) {
+        SpotifyPlayer player = this.player;
+        if (player == null) {
+            callbackContext.error("Invalid player. Please call initSession first!");
+            return;
+        }
+
+        if (trackUri != null && trackUri.length() > 0) {
+            player.playUri(new Player.OperationCallback() {
+                @Override
+                public void onSuccess() {
+                    callbackContext.success("Success");
+                }
+
+                @Override
+                public void onError(Error error) {
+                    callbackContext.error("Playing of track failed: " + error.toString());
+                }
+            }, trackUri, 0, 0);
+        } else {
+            // resume
+            this.play(callbackContext);
+        }
+    }
+
     private void pause(final CallbackContext callbackContext) {
         SpotifyPlayer player = this.player;
 
         PlaybackState state = player.getPlaybackState();
-        if(!state.isPlaying) {
+        if (!state.isPlaying) {
             callbackContext.success("Not playing");
             return;
         }
@@ -214,7 +206,7 @@ public class CordovaSpotify extends CordovaPlugin
 
     private void onLoginResult(int resultCode, Intent intent) {
         final LoginState state = this.loginState;
-        if(!LoginState.isValid(state)) {
+        if (!LoginState.isValid(state)) {
             return;
         }
         this.loginState = null;
