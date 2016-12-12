@@ -94,7 +94,8 @@ public class CordovaSpotify extends CordovaPlugin
     }
 
     private void initSession(final CallbackContext callbackContext, String accessToken) {
-        if (this.clientId == null || this.clientId.length() < 1) {
+        String clientId = this.clientId;
+        if (clientId == null || clientId.length() < 1) {
             callbackContext.error("Invalid clientId. Call authenticate first!");
             return;
         }
@@ -102,7 +103,7 @@ public class CordovaSpotify extends CordovaPlugin
         Config playerConfig = new Config(
             this.cordova.getActivity().getApplicationContext(),
             accessToken,
-            this.clientId
+            clientId
         );
 
         Spotify.getPlayer(playerConfig, this.cordova.getActivity(), new SpotifyPlayer.InitializationObserver() {
