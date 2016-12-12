@@ -7,7 +7,5 @@ module.exports = function (methodName, args) {
         throw new Error("Missing method or class name argument (1st).");
     }
 
-    return new Promise(function (resolve, reject) {
-        return _exec(resolve, reject, 'SpotifyConnector', methodName, args);
-    });
+    return new Promise((res, rej) => _exec(res, rej, 'SpotifyConnector', methodName, args || []));
 }

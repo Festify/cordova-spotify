@@ -1,4 +1,4 @@
-var platform = null;
+let platform = null;
 
 switch(cordova.platformId) {
     case 'ios':
