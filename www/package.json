@@ -1,7 +1,7 @@
 {
-  "name": "cordova-spotify",
+  "name": "cordova-spotify-js",
   "version": "0.1.0",
-  "description": "Spotify SDK Cordova bindings for Festify",
+  "description": "The JavaScript part of the cordova-spotify plugin.",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/Festify/cordova-spotify.git"
@@ -20,6 +20,12 @@
   "homepage": "https://github.com/Festify/cordova-spotify#readme",
   "dependencies": {
     "es6-promise": "^4.0.5",
-    "isomorphic-fetch": "^2.2.1"
+    "isomorphic-fetch": "^2.2.1",
+    "qs": "^6.3.0"
+  },
+  "devDependencies": {
+    "babel-core": "^6.20.0",
+    "babel-loader": "^6.2.9",
+    "webpack": "^1.14.0"
   }
 }

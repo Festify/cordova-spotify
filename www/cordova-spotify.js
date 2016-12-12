@@ -1,20 +1,8 @@
-var _exec = require('cordova/exec');
+require('es6-promise/auto');
 
-function exec(methodName, args, callback) {
-    if (!methodName) {
-        throw new Error("Missing method or class name argument (1st).");
-    }
-
-    return _exec(function (res) {
-        if (callback) {
-            callback(null, res);
-        }
-    }, function (err) {
-        if (callback) {
-            callback(err);
-        }
-    }, 'SpotifyConnector', methodName, args);
-}
+const platform = require('./platforms');
+const exec = require('./lib/execPromise.js');
+const conf = require('./lib/const.js');
 
 function Session(sessionObject) {
     if (!(this instanceof Session)) {
@@ -31,33 +19,26 @@ function Session(sessionObject) {
     }
 }
 
-Session.prototype.logout = function (callback) {
-    exec('logout', [], callback);
+Session.prototype.logout = function () {
+    return exec('logout', []);
 };
 
-Session.prototype.play = function (trackLink, callback) {
-    exec('play', [trackLink], callback);
+Session.prototype.play = function (trackLink) {
+    return exec('play', [trackLink]);
 };
 
-Session.prototype.pause = function (callback) {
-    exec('pause', [], callback);
+Session.prototype.pause = function () {
+    return exec('pause', []);
 };
 
-Session.prototype.setVolume = function (volume, callback) {
-    exec('setVolume', [volume], callback);
-};
-
-exports.authenticate = function (options, callback) {
-    if (!options.urlScheme || !options.clientId || !options.scopes) {
-        throw new Error("Missing urlScheme, scopes or clientId parameter.");
+exports.authenticate = function (options) {
+    if (!options.urlScheme || !options.clientId || !options.scopes ||
+        !options.tokenSwapUrl || !options.tokenRefreshUrl) {
+        throw new Error("Missing parameters");
     }
 
-    var args = [options.urlScheme, options.clientId, options.scopes];
-    if (options.tokenSwapUrl && options.tokenRefreshUrl) {
-        args = args.concat([options.tokenSwapUrl, options.tokenRefreshUrl]);
-    }
-
-    exec('authenticate', args, function (err, sess) {
-        callback(err, !err ? new Session(sess) : null);
-    });
+    return platform.authenticate(options)
+        .then(function (authData) {
+            return new Session(authData);
+        });
 };

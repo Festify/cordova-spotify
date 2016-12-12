@@ -21,15 +21,10 @@ const spotifyRequest = params => {
             headers: {
                 "Authorization": "Basic " + new Buffer(CLIENT_ID + ":" + CLIENT_SECRET).toString('base64')
             }
-        }, (err, resp) => {
-            if(err) {
-                reject(err);
-            }
-            resolve(resp);
-        });
+        }, (err, resp) => err ? reject(err) : resolve(resp));
     })
         .then(resp => {
-            if(resp.statusCode != 200) {
+            if (resp.statusCode != 200) {
                 return Promise.reject({
                     statusCode: resp.statusCode,
                     body: resp.body
@@ -51,13 +46,12 @@ const spotifyRequest = params => {
 module.exports.exchangeCode = (event, context, callback) => {
     const params = qs.parse(event.body);
 
-    if(!params.code) {
+    if (!params.code) {
         callback(null, {
             statusCode: 400,
             body: JSON.stringify({
                 "error" : "Parameter missing"
             })
-
         });
         return;
     }
@@ -88,13 +82,12 @@ module.exports.exchangeCode = (event, context, callback) => {
 module.exports.refreshToken = (event, context, callback) => {
     const params = qs.parse(event.body);
 
-    if(!params.refresh_token) {
+    if (!params.refresh_token) {
         callback(null, {
             statusCode: 400,
             body: JSON.stringify({
                 "error" : "Parameter missing"
             })
-
         });
         return;
     }

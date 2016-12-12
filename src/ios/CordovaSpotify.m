@@ -11,7 +11,7 @@ NSString *dateToString(NSDate* date) {
 NSDictionary *sessionToDict(SPTSession* session) {
     return @{
             @"canonicalUsername": [session canonicalUsername],
-            @"encryptedRefreshToken": ([session encryptedRefreshToken] == nil) ?[NSNull null] : [session encryptedRefreshToken],
+            @"encryptedRefreshToken": ([session encryptedRefreshToken] == nil) ? [NSNull null] : [session encryptedRefreshToken],
             @"accessToken": [session accessToken],
             @"tokenType": [session tokenType],
             @"expirationDate": dateToString([session expirationDate])
@@ -92,6 +92,10 @@ NSDictionary *sessionToDict(SPTSession* session) {
     [self.viewController presentViewController:authViewController animated:YES completion:nil];
 }
 
+- (void) initSession:(CDVInvokedUrlCommand*)command {
+
+}
+
 - (void) play:(CDVInvokedUrlCommand*)command {
     __weak CordovaSpotify* _self = self;
     SPTErrorableOperationCallback cb = ^(NSError* err) {
@@ -113,16 +117,6 @@ NSDictionary *sessionToDict(SPTSession* session) {
 
     [self.player setIsPlaying: NO callback: ^(NSError* err) {
         [_self sendResultForCommand:commmand withError:err andSuccess:nil];
-    }];
-}
-
-- (void) setVolume:(CDVInvokedUrlCommand*)command {
-    double volume = [[command.arguments objectAtIndex: 0] doubleValue];
-
-    __weak CordovaSpotify* _self = self;
-
-    [self.player setVolume: volume callback: ^(NSError* error) {
-        [_self sendResultForCommand: command withError: error andSuccess:@""];
     }];
 }
 
