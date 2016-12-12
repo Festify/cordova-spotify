@@ -1,6 +1,5 @@
 require('es6-promise/auto');
 
-const conf = require('./lib/const.js');
 const exec = require('./lib/execPromise.js');
 const platform = require('./platforms');
 
