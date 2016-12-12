@@ -1,63 +1,36 @@
-var _exec = require('cordova/exec');
+require('es6-promise/auto');
 
-function exec(methodName, args, callback) {
-    if (!methodName) {
-        throw new Error("Missing method or class name argument (1st).");
+const exec = require('./lib/execPromise.js');
+const platform = require('./platforms');
+
+class Session {
+    constructor(sessionObject) {
+        if (!sessionObject) {
+            throw new Error("Missing native session object.");
+        }
+
+        Object.assign(this, sessionObject);
     }
 
-    return _exec(function (res) {
-        if (callback) {
-            callback(null, res);
-        }
-    }, function (err) {
-        if (callback) {
-            callback(err);
-        }
-    }, 'SpotifyConnector', methodName, args);
-}
-
-function Session(sessionObject) {
-    if (!(this instanceof Session)) {
-        return new Session(sessionObject);
-    }
-    if (!sessionObject) {
-        throw new Error("Missing native session object.");
+    logout() {
+        return exec('logout');
     }
 
-    for (var key in sessionObject) {
-        if (sessionObject.hasOwnProperty(key)) {
-            this[key] = sessionObject[key];
-        }
+    play(trackUri) {
+        return exec('play', [trackUri]);
+    }
+
+    pause() {
+        return exec('pause');
     }
 }
 
-Session.prototype.logout = function (callback) {
-    exec('logout', [], callback);
-};
-
-Session.prototype.play = function (trackLink, callback) {
-    exec('play', [trackLink], callback);
-};
-
-Session.prototype.pause = function (callback) {
-    exec('pause', [], callback);
-};
-
-Session.prototype.setVolume = function (volume, callback) {
-    exec('setVolume', [volume], callback);
-};
-
-exports.authenticate = function (options, callback) {
-    if (!options.urlScheme || !options.clientId || !options.scopes) {
-        throw new Error("Missing urlScheme, scopes or clientId parameter.");
+exports.authenticate = function (options) {
+    if (!options.urlScheme || !options.clientId || !options.scopes ||
+        !options.tokenSwapUrl || !options.tokenRefreshUrl) {
+        throw new Error("Missing parameters");
     }
 
-    var args = [options.urlScheme, options.clientId, options.scopes];
-    if (options.tokenSwapUrl && options.tokenRefreshUrl) {
-        args = args.concat([options.tokenSwapUrl, options.tokenRefreshUrl]);
-    }
-
-    exec('authenticate', args, function (err, sess) {
-        callback(err, !err ? new Session(sess) : null);
-    });
+    return platform.authenticate(options)
+        .then(authData => new Session(authData));
 };
