@@ -23,9 +23,7 @@ module.exports = {
         ])
             .then(res => {
                 return fetch(options.tokenSwapUrl, {
-                    body: qs.stringify({
-                        code: res.code
-                    }),
+                    body: qs.stringify({ code: res.code }),
                     method: 'POST'
                 }).then(decode("Token service did not return a successful response code."));
             })
