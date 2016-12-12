@@ -1,6 +1,6 @@
 {
   "name": "cordova-spotify-js",
-  "version": "1.0.0",
+  "version": "0.1.0",
   "description": "The JavaScript part of the cordova-spotify plugin.",
   "repository": {
     "type": "git",

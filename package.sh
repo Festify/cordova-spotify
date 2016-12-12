@@ -1,13 +1,9 @@
 #!/usr/bin/env bash
 
 echo "Starting JS build"
-
-CWD=$(dirname $0)/www
-cd $CWD
-
-export PATH=$CWD/node_modules/.bin:$PATH
+cd "$(dirname $0)/www"
 
 npm install
-webpack
+./node_modules/.bin/webpack
 
 echo "JS build finished"

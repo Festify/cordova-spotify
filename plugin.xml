@@ -10,7 +10,6 @@
 
     <platform name="android">
         <hook type="before_plugin_install" src="install-android.sh" />
-        <hook type="before_build" src="src/android/build-spotify-auth.sh" />
 
         <config-file target="config.xml" parent="/*">
             <feature name="SpotifyConnector">

@@ -1,10 +1,22 @@
 # Cordova Spotify SDK Plugin (Alpha)
 
-Note: _This is iOS only at the moment, but Android is on the Roadmap_
+A thin Spotify SDK wrapper for iOS and Android.
+
+## Installation
+
+```bash
+git clone https://github.com/Festify/cordova-spotify
+cd ./MyCordovaProject
+cordova plugin add ../cordova-spotify
+```
+
+A npm-based installation will be provided at a later stage when the stability has improved.
+
+Note: Make sure your installation path doesn't contain any spaces.
 
 ## OAuth Code Grant Flow
 
-The Spotify SDK needs some server code, if you don't want to login your users repeatedly every hour:
+The Spotify SDK needs some server code because you don't want to login your users repeatedly every hour:
 [Documentation](https://developer.spotify.com/technologies/spotify-ios-sdk/token-swap-refresh/)
 
 To implement the endpoints for `tokenSwapURL` and `tokenRefreshURL` we built a [Serverless](https://serverless.com)
