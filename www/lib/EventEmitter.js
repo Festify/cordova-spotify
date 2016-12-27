@@ -8,7 +8,7 @@ class EventEmitter extends Emitter {
         this.hasBeenRegistered = false;
     }
 
-    register() {
+    registerEvents() {
         return new Promise((resolve, reject) => {
             if (!this.hasBeenRegistered) {
                 cordova.exec(event => {

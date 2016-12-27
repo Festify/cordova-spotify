@@ -35,6 +35,5 @@ exports.authenticate = function (options) {
     }
 
     return platform.authenticate(options)
-        .then(authData => new Session(authData))
-        .then(session => session.register());
+        .then(authData => (new Session(authData)).registerEvents());
 };
