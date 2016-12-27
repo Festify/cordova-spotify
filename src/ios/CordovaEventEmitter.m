@@ -1,5 +1,14 @@
 #import "CordovaEventEmitter.h"
 
+NSString* getErrorFromMatrix(NSDictionary *matrix, NSNumber *code) {
+    NSString *errorString = [matrix objectForKey: code];
+
+    if(!errorString) {
+        return @"Unknown";
+    }
+    return errorString;
+}
+
 @implementation CordovaEventEmitter
 
 + (instancetype)eventEmitterWithCommandDelegate:(id <CDVCommandDelegate>)commandDelegate {
