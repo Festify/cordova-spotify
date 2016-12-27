@@ -10,20 +10,20 @@ class EventEmitter extends Emitter {
     }
 
     register() {
-        const p = new Promise();
-        if (!this.hasBeenRegistered) {
-            exec(event => {
-                if (!this.hasBeenRegistered) {
-                    this.hasBeenRegistered = true;
-                    p.resolve(this);
-                } else {
-                    this.emit(event.name, ...(event.args || []));
-                }
-            }, err => p.reject(err), "registerEventsListener", []);
-        } else {
-            p.reject(new Error("Already registered."));
-        }
-        return p;
+        return new Promise((resolve, reject) => {
+            if (!this.hasBeenRegistered) {
+                exec(event => {
+                    if (!this.hasBeenRegistered) {
+                        this.hasBeenRegistered = true;
+                        resolve(this);
+                    } else {
+                        this.emit(event.name, ...(event.args || []));
+                    }
+                }, err => reject(err), "registerEventsListener", []);
+            } else {
+                reject(new Error("Already registered."));
+            }
+        });
     }
 }
 
