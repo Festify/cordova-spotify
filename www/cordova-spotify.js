@@ -1,10 +1,13 @@
 require('es6-promise/auto');
 
+const EventEmitter = require('./lib/EventEmitter.js');
 const exec = require('./lib/execPromise.js');
 const platform = require('./platforms');
 
-class Session {
+class Session extends EventEmitter {
     constructor(sessionObject) {
+        super();
+
         if (!sessionObject) {
             throw new Error("Missing native session object.");
         }
@@ -32,5 +35,6 @@ exports.authenticate = function (options) {
     }
 
     return platform.authenticate(options)
-        .then(authData => new Session(authData));
+        .then(authData => new Session(authData))
+        .then(session => session.register());
 };
