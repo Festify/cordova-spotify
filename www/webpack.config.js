@@ -1,3 +1,5 @@
+var webpack = require('webpack');
+
 module.exports = {
     entry: './cordova-spotify.js',
     output: {
@@ -16,5 +18,8 @@ module.exports = {
             exclude: /node_modules/,
             loader: 'babel-loader'
         }]
-    }
+    },
+    plugins: [
+        new webpack.optimize.UglifyJsPlugin()
+    ]
 };
