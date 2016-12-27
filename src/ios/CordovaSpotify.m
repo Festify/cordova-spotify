@@ -22,8 +22,12 @@ NSDictionary *sessionToDict(SPTSession* session) {
 - (void)pluginInitialize {
     self.isLoggedIn = NO;
 
+    // Initialize delegates for event handling
+    __weak id <CDVCommandDelegate> _commandDelegate = self.commandDelegate;
+    self.audioStreamingDelegate = [AudioStreamingDelegate eventEmitterWithCommandDelegate: _commandDelegate];
+
     self.player = [SPTAudioStreamingController sharedInstance];
-    self.player.delegate = self;
+    self.player.delegate = self.audioStreamingDelegate;
 }
 
 - (void) authenticate:(CDVInvokedUrlCommand*)command {
@@ -114,6 +118,17 @@ NSDictionary *sessionToDict(SPTSession* session) {
     [self.player setIsPlaying: NO callback: ^(NSError* err) {
         [_self sendResultForCommand:command withError:err andSuccess:nil];
     }];
+}
+
+- (void) registerEventsListener:(CDVInvokedUrlCommand*)command {
+    [self.audioStreamingDelegate setCallbackId:command.callbackId];
+
+    CDVPluginResult *result = [CDVPluginResult
+            resultWithStatus: CDVCommandStatus_OK
+             messageAsString: nil];
+    [result setKeepCallbackAsBool:YES];
+
+    [self.commandDelegate sendPluginResult: result callbackId: command.callbackId];
 }
 
 - (void) audioStreamingDidLogin:(SPTAudioStreamingController *)audioStreaming {
