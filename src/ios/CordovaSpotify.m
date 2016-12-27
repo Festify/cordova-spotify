@@ -92,10 +92,6 @@ NSDictionary *sessionToDict(SPTSession* session) {
     [self.viewController presentViewController:authViewController animated:YES completion:nil];
 }
 
-- (void) initSession:(CDVInvokedUrlCommand*)command {
-
-}
-
 - (void) play:(CDVInvokedUrlCommand*)command {
     __weak CordovaSpotify* _self = self;
     SPTErrorableOperationCallback cb = ^(NSError* err) {
