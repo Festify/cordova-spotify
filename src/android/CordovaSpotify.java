@@ -33,23 +33,23 @@ public class CordovaSpotify extends CordovaPlugin
         implements ConnectionStateCallback, SpotifyPlayer.NotificationCallback {
     private static final int LOGIN_REQUEST_CODE = 1337;
 
-    private String clientId = "";
+    private String clientId = null;
     private LoginState loginState = null;
     private SpotifyPlayer player = null;
 
     @Override
     public boolean execute(String action, JSONArray args, CallbackContext callbackContext) throws JSONException {
-        if (action.equals("authenticate")) {
+        if ("authenticate".equals(action)) {
             String urlScheme = args.getString(0);
             String clientId = args.getString(1);
             JSONArray scopes = args.getJSONArray(2);
             this.authenticate(callbackContext, clientId, urlScheme, scopes);
             return true;
-        } else if (action.equals("initSession")) {
+        } else if ("initSession".equals(action)) {
             String accessToken = args.getString(0);
             this.initSession(callbackContext, accessToken);
             return true;
-        } else if (action.equals("play")) {
+        } else if ("play".equals(action)) {
             if (!args.isNull(0)) {
                 String trackUri = args.getString(0);
                 this.play(callbackContext, trackUri);
@@ -57,7 +57,7 @@ public class CordovaSpotify extends CordovaPlugin
                 this.play(callbackContext);
             }
             return true;
-        } else if (action.equals("pause")) {
+        } else if ("pause".equals(action)) {
             this.pause(callbackContext);
             return true;
         } else {
