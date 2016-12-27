@@ -17,7 +17,7 @@ class EventEmitter extends Emitter {
                     this.hasBeenRegistered = true;
                     p.resolve(this);
                 } else {
-                    this.emit(event.name, ...event.args);
+                    this.emit(event.name, ...(event.args || []));
                 }
             }, err => p.reject(err), "registerEventsListener", []);
         } else {
