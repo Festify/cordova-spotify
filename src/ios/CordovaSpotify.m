@@ -25,9 +25,11 @@ NSDictionary *sessionToDict(SPTSession* session) {
     // Initialize delegates for event handling
     __weak id <CDVCommandDelegate> _commandDelegate = self.commandDelegate;
     self.audioStreamingDelegate = [AudioStreamingDelegate eventEmitterWithCommandDelegate: _commandDelegate];
+    self.audioStreamingPlaybackDelegate = [AudioStreamingPlaybackDelegate eventEmitterWithCommandDelegate: _commandDelegate];
 
     self.player = [SPTAudioStreamingController sharedInstance];
     self.player.delegate = self.audioStreamingDelegate;
+    self.player.playbackDelegate = self.audioStreamingPlaybackDelegate;
 }
 
 - (void) authenticate:(CDVInvokedUrlCommand*)command {
@@ -122,6 +124,7 @@ NSDictionary *sessionToDict(SPTSession* session) {
 
 - (void) registerEventsListener:(CDVInvokedUrlCommand*)command {
     [self.audioStreamingDelegate setCallbackId:command.callbackId];
+    [self.audioStreamingPlaybackDelegate setCallbackId:command.callbackId];
 
     CDVPluginResult *result = [CDVPluginResult
             resultWithStatus: CDVCommandStatus_OK

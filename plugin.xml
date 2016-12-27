@@ -56,6 +56,8 @@
         <source-file src="src/ios/CordovaEventEmitter.m" />
         <header-file src="src/ios/AudioStreamingDelegate.h" />
         <source-file src="src/ios/AudioStreamingDelegate.m" />
+        <header-file src="src/ios/AudioStreamingPlaybackDelegate.h" />
+        <source-file src="src/ios/AudioStreamingPlaybackDelegate.m" />
 
         <framework src="src/ios/spotify-sdk/SpotifyAudioPlayback.framework" custom="true" />
         <framework src="src/ios/spotify-sdk/SpotifyAuthentication.framework" custom="true" />

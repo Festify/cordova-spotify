@@ -7,10 +7,12 @@
 #import <SafariServices/SafariServices.h>
 
 #import "AudioStreamingDelegate.h"
+#import "AudioStreamingPlaybackDelegate.h"
 
 @interface CordovaSpotify : CDVPlugin
     @property (nonatomic) bool isLoggedIn;
     @property (nonatomic) AudioStreamingDelegate *audioStreamingDelegate;
+    @property (nonatomic) AudioStreamingPlaybackDelegate *audioStreamingPlaybackDelegate;
     @property (nonatomic, strong) SPTSession* session;
     @property (nonatomic, strong) SPTAudioStreamingController* player;
 
