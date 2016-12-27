@@ -1,6 +1,5 @@
 require('es6-promise/auto');
 const Emitter = require('eventemitter3');
-const exec = cordova.exec;
 
 class EventEmitter extends Emitter {
     constructor() {
@@ -12,14 +11,14 @@ class EventEmitter extends Emitter {
     register() {
         return new Promise((resolve, reject) => {
             if (!this.hasBeenRegistered) {
-                exec(event => {
+                cordova.exec(event => {
                     if (!this.hasBeenRegistered) {
                         this.hasBeenRegistered = true;
                         resolve(this);
                     } else {
                         this.emit(event.name, ...(event.args || []));
                     }
-                }, err => reject(err), "registerEventsListener", []);
+                }, err => reject(err), 'SpotifyConnector', 'registerEventsListener', []);
             } else {
                 reject(new Error("Already registered."));
             }
