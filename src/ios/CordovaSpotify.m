@@ -108,11 +108,11 @@ NSDictionary *sessionToDict(SPTSession* session) {
     }
 }
 
-- (void) pause:(CDVInvokedUrlCommand*)commmand {
+- (void) pause:(CDVInvokedUrlCommand*)command {
     __weak CordovaSpotify* _self = self;
 
     [self.player setIsPlaying: NO callback: ^(NSError* err) {
-        [_self sendResultForCommand:commmand withError:err andSuccess:nil];
+        [_self sendResultForCommand:command withError:err andSuccess:nil];
     }];
 }
 
