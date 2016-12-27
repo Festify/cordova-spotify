@@ -2,6 +2,7 @@ package rocks.festify;
 
 import org.apache.cordova.CordovaPlugin;
 import org.apache.cordova.CallbackContext;
+import org.apache.cordova.PluginResult;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -13,7 +14,6 @@ import java.text.SimpleDateFormat;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.util.Log;
 
 import com.spotify.sdk.android.authentication.AuthenticationClient;
 import com.spotify.sdk.android.authentication.AuthenticationRequest;
@@ -22,20 +22,22 @@ import com.spotify.sdk.android.player.Config;
 import com.spotify.sdk.android.player.ConnectionStateCallback;
 import com.spotify.sdk.android.player.Error;
 import com.spotify.sdk.android.player.Player;
-import com.spotify.sdk.android.player.PlayerEvent;
 import com.spotify.sdk.android.player.PlaybackState;
 import com.spotify.sdk.android.player.Spotify;
 import com.spotify.sdk.android.player.SpotifyPlayer;
 
-import rocks.festify.LoginState;
+import rocks.festify.ConnectionEventsHandler;
+import rocks.festify.PlayerEventsHandler;
 
-public class CordovaSpotify extends CordovaPlugin
-        implements ConnectionStateCallback, SpotifyPlayer.NotificationCallback {
+public class CordovaSpotify extends CordovaPlugin {
     private static final int LOGIN_REQUEST_CODE = 1337;
 
     private String clientId = null;
     private LoginState loginState = null;
     private SpotifyPlayer player = null;
+
+    private ConnectionEventsHandler connectionEventsHandler = new ConnectionEventsHandler();
+    private PlayerEventsHandler playerEventsHandler = new PlayerEventsHandler();
 
     @Override
     public boolean execute(String action, JSONArray args, CallbackContext callbackContext) throws JSONException {
@@ -59,6 +61,9 @@ public class CordovaSpotify extends CordovaPlugin
             return true;
         } else if ("pause".equals(action)) {
             this.pause(callbackContext);
+            return true;
+        } else if ("registerEventsListener".equals(action)) {
+            this.registerEventsListener(callbackContext);
             return true;
         } else {
             return false;
@@ -110,8 +115,8 @@ public class CordovaSpotify extends CordovaPlugin
             @Override
             public void onInitialized(SpotifyPlayer spotifyPlayer) {
                 CordovaSpotify.this.player = spotifyPlayer;
-                spotifyPlayer.addConnectionStateCallback(CordovaSpotify.this);
-                spotifyPlayer.addNotificationCallback(CordovaSpotify.this);
+                spotifyPlayer.addConnectionStateCallback(CordovaSpotify.this.connectionEventsHandler);
+                spotifyPlayer.addNotificationCallback(CordovaSpotify.this.playerEventsHandler);
 
                 callbackContext.success("Success");
             }
@@ -191,8 +196,13 @@ public class CordovaSpotify extends CordovaPlugin
         });
     }
 
-    private void registerEventsHandler(final CallbackContext callbackContext) {
+    private void registerEventsListener(final CallbackContext callbackContext) {
+        this.connectionEventsHandler.setCallback(callbackContext);
+        this.playerEventsHandler.setCallback(callbackContext);
 
+        final PluginResult res = new PluginResult(PluginResult.Status.OK);
+        res.setKeepCallback(true);
+        callbackContext.sendPluginResult(res);
     }
 
     /*
@@ -225,49 +235,28 @@ public class CordovaSpotify extends CordovaPlugin
             state.getLoginCallbackContext().success(new JSONObject(responseMap));
         }
     }
+}
 
-    @Override
-    public void onPlaybackEvent(PlayerEvent playerEvent) {
-        Log.d("MainActivity", "Playback event received: " + playerEvent.name());
-        switch (playerEvent) {
-            // Handle event type as necessary
-            default:
-                break;
-        }
+class LoginState {
+    private CallbackContext loginCallbackContext = null;
+    private String clientId = "";
+
+    public LoginState(CallbackContext loginCallbackContext, String clientId) {
+        this.loginCallbackContext = loginCallbackContext;
+        this.clientId = clientId;
     }
 
-    @Override
-    public void onPlaybackError(Error error) {
-        Log.d("MainActivity", "Playback error received: " + error.name());
-        switch (error) {
-            // Handle error type as necessary
-            default:
-                break;
-        }
+    public CallbackContext getLoginCallbackContext() {
+        return loginCallbackContext;
     }
 
-    @Override
-    public void onLoggedIn() {
-        Log.d("MainActivity", "User logged in");
+    public String getClientId() {
+        return clientId;
     }
 
-    @Override
-    public void onLoggedOut() {
-        Log.d("MainActivity", "User logged out");
-    }
-
-    @Override
-    public void onLoginFailed(Error error) {
-        Log.d("MainActivity", "Login failed");
-    }
-
-    @Override
-    public void onTemporaryError() {
-        Log.d("MainActivity", "Temporary error occurred");
-    }
-
-    @Override
-    public void onConnectionMessage(String message) {
-        Log.d("MainActivity", "Received connection message: " + message);
+    public static boolean isValid(LoginState state) {
+        return state != null &&
+               state.loginCallbackContext != null &&
+               (state.clientId != null && state.clientId.length() > 0);
     }
 }

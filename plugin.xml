@@ -23,8 +23,10 @@
                 android:theme="@android:style/Theme.Translucent.NoTitleBar" />
         </config-file>
 
+        <source-file src="src/android/ConnectionEventsHandler.java" target-dir="src/rocks/festify" />
         <source-file src="src/android/CordovaSpotify.java" target-dir="src/rocks/festify" />
-        <source-file src="src/android/LoginState.java" target-dir="src/rocks/festify" />
+        <source-file src="src/android/Emitter.java" target-dir="src/rocks/festify" />
+        <source-file src="src/android/PlayerEventsHandler.java" target-dir="src/rocks/festify" />
 
         <!--
             Because Cordova doesn't like linking to AARs, we do some black magic
