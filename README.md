@@ -6,6 +6,10 @@ An [Apache Cordova](https://cordova.apache.org/) plugin providing a thin wrapper
 
 This plugin provides a very thin layer over the authentication and playback functionality of the Spotify SDK. It allows your users to authenticate using OAuth 2.0 and allows you to play Spotify tracks via their URI. Metadata functionality has deliberately been left out in favor of the [Web API](https://developer.spotify.com/web-api/). After your users have been authenticated, you are given the access token, so accessing the Web API is trivial.
 
+## Stability
+
+This plugin is currently in development, but will be used in the new [Festify](https://github.com/Festify/app). So once Festify is out, you can assume this library to be reasonably stable. We will try to fix bugs as soon as we find them. PRs welcome!
+
 ## Installation
 
 ```bash
