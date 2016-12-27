@@ -33,8 +33,8 @@ public class CordovaSpotify extends CordovaPlugin
         implements ConnectionStateCallback, SpotifyPlayer.NotificationCallback {
     private static final int LOGIN_REQUEST_CODE = 1337;
 
-    private LoginState loginState = null;
     private String clientId = "";
+    private LoginState loginState = null;
     private SpotifyPlayer player = null;
 
     @Override
@@ -189,6 +189,10 @@ public class CordovaSpotify extends CordovaPlugin
                 callbackContext.error("Pausing failed: " + error.toString());
             }
         });
+    }
+
+    private void registerEventsHandler(final CallbackContext callbackContext) {
+
     }
 
     /*
