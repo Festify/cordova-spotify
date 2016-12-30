@@ -22,7 +22,6 @@ class EventEmitter extends Emitter {
                         this.hasBeenRegistered = true;
                         resolve(this);
                     } else {
-                        console.log("Emitting '" + event.name + "' with args " + (event.args || []).join(", "));
                         setTimeout(() => this.emit(event.name, ...(event.args || [])));
                     }
                 }, err => reject(err), 'SpotifyConnector', 'registerEventsListener', []);
