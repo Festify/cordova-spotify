@@ -40,7 +40,8 @@ public class CordovaSpotify extends CordovaPlugin {
     private PlayerEventsHandler playerEventsHandler = new PlayerEventsHandler();
 
     @Override
-    public boolean execute(String action, JSONArray args, CallbackContext callbackContext) throws JSONException {
+    public boolean execute(String action, JSONArray args, CallbackContext callbackContext)
+            throws JSONException {
         if ("authenticate".equals(action)) {
             String urlScheme = args.getString(0);
             String clientId = args.getString(1);
