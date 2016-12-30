@@ -1,8 +1,3 @@
-//
-// Created by Marcus Weiner on 27.12.16.
-// Copyright (c) 2016 Festify. All rights reserved.
-//
-
 #import "AudioStreamingPlaybackDelegate.h"
 
 
