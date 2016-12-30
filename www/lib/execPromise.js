@@ -7,5 +7,14 @@ module.exports = function (methodName, args) {
         throw new Error("Missing method or class name argument (1st).");
     }
 
-    return new Promise((res, rej) => _exec(res, rej, 'SpotifyConnector', methodName, args || []));
+    // Delay the resolution and rejection callbacks because
+    // the Spotify SDKs do not like being reinvoked from inside
+    // of an event handler function.
+    return new Promise((res, rej) => _exec(
+        val => setTimeout(() => res(val)),
+        err => setTimeout(() => rej(err)),
+        'SpotifyConnector',
+        methodName,
+        args || []
+    ));
 }
