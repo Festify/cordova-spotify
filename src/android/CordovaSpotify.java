@@ -177,6 +177,10 @@ public class CordovaSpotify extends CordovaPlugin {
 
     private void pause(final CallbackContext callbackContext) {
         SpotifyPlayer player = this.player;
+        if (player == null) {
+            callbackContext.error("Invalid player. Please call initSession first!");
+            return;
+        }
 
         PlaybackState state = player.getPlaybackState();
         if (!state.isPlaying) {
