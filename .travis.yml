@@ -6,10 +6,11 @@ os:
 osx_image: xcode8.2
 
 before_install:
-  - npm cache clean
-  - echo y | android update sdk -u --filter android-24,android-25
+  - brew update
 
 install:
+  - brew install android-sdk
+  - export PATH=$PATH:/usr/local/opt/android-sdk/tools:/usr/local/opt/android-sdk/platform-tools
   - npm install -g cordova
   - npm install
 
