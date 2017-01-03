@@ -11,12 +11,16 @@ before_install:
 install:
   - brew install android-sdk
   - export PATH=$PATH:/usr/local/opt/android-sdk/tools:/usr/local/opt/android-sdk/platform-tools
+  - export ANDROID_HOME=/usr/local/opt/android-sdk
+  - export ANDROID_SDK_ROOT=$ANDROID_HOME
   - npm install -g cordova
   - npm install
 
 before_script:
   - cordova create HelloCordova
-  - cd ./HelloCordova && cordova platform add android ios
+  - cd ./HelloCordova
+  - cordova platform add android ios
 
 script:
-  - cd ./HelloCordova && cordova plugin add .. && cordova build --release
+  - cordova plugin add ..
+  - cordova build --release
