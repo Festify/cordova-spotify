@@ -1,0 +1,22 @@
+language: android
+
+os:
+  - osx
+
+osx_image: xcode8.2
+
+before_install:
+  - npm cache clean
+  - echo y | android update sdk -u --filter android-24,android-25
+
+install:
+  - npm install -g cordova
+  - npm install
+
+before_script:
+  - cordova create HelloCordova
+  - cd ./HelloCordova && cordova platform add android ios
+
+script:
+  - cd ./HelloCordova && cordova plugin add ..
+  - cordova build --release
