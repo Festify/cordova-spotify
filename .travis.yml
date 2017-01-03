@@ -18,5 +18,4 @@ before_script:
   - cd ./HelloCordova && cordova platform add android ios
 
 script:
-  - cd ./HelloCordova && cordova plugin add ..
-  - cordova build --release
+  - cd ./HelloCordova && cordova plugin add .. && cordova build --release
