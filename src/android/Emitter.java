@@ -10,7 +10,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class Emitter {
+public abstract class Emitter {
     private static final String TAG = "Emitter";
 
     private CallbackContext ctx = null;
