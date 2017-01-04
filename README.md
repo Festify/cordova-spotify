@@ -8,7 +8,11 @@ This plugin provides a very thin layer over the authentication and playback func
 
 ## Stability
 
-This plugin is currently in development, but will be used in the new [Festify](https://github.com/Festify/app). So once Festify is out, you can assume this library to be reasonably stable. We will try to fix bugs as soon as we find them. PRs welcome!
+This plugin is currently in development, but will be used in the new [Festify](https://github.com/Festify/app). So once Festify is out, you can assume this library to be reasonably stable. We will try to fix bugs as soon as we find them.
+
+## Contributing
+
+Pull requests are very welcome! Please use the [gitmoji](https://gitmoji.carloscuesta.me/) style for commit messages.
 
 ## Installation
 
