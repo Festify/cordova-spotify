@@ -15,6 +15,10 @@ class Session extends EventEmitter {
         Object.assign(this, sessionObject);
     }
 
+    getPosition() {
+        return exec('getPosition');
+    }
+
     logout() {
         return exec('logout');
     }

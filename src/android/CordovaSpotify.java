@@ -52,6 +52,9 @@ public class CordovaSpotify extends CordovaPlugin {
             String accessToken = args.getString(0);
             this.initSession(callbackContext, accessToken);
             return true;
+        } else if ("getPosition".equals(action)) {
+            this.getPosition(callbackContext);
+            return true;
         } else if ("play".equals(action)) {
             if (!args.isNull(0)) {
                 String trackUri = args.getString(0);
@@ -127,6 +130,23 @@ public class CordovaSpotify extends CordovaPlugin {
                 callbackContext.error("Could not initialize player: " + throwable.toString());
             }
         });
+    }
+
+    private void getPosition(final CallbackContext callbackContext) {
+        SpotifyPlayer player = this.player;
+        if (player == null) {
+            callbackContext.error("Invalid player. Please call initSession first!");
+            return;
+        }
+
+        PlaybackState state = player.getPlaybackState();
+        if (state == null) {
+            callbackContext.error("Received null from SpotifyPlayer.getPlaybackState()!");
+            return;
+        }
+
+        PluginResult res = new PluginResult(PluginResult.Status.OK, (float)state.positionMs);
+        callbackContext.sendPluginResult(res);
     }
 
     private void play(final CallbackContext callbackContext) {

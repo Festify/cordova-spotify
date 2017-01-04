@@ -98,6 +98,15 @@ NSDictionary *sessionToDict(SPTSession* session) {
     [self.viewController presentViewController:authViewController animated:YES completion:nil];
 }
 
+- (void) getPosition:(CDVInvokedUrlCommand*)command {
+    double durationMs = [[self.player playbackState] position] * 1000.0;
+
+    CDVPluginResult *result = [CDVPluginResult
+            resultWithStatus: CDVCommandStatus_OK
+             messageAsDouble: durationMs];
+    [self.commandDelegate sendPluginResult: result callbackId: command.callbackId];
+}
+
 - (void) play:(CDVInvokedUrlCommand*)command {
     __weak CordovaSpotify* _self = self;
     SPTErrorableOperationCallback cb = ^(NSError* err) {
