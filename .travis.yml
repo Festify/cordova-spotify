@@ -29,4 +29,4 @@ before_script:
 script:
   - cordova plugin add ..
   - cordova build android
-  - xcodebuild -project platforms/ios/HelloCordova.xcodeproj -scheme HelloCordova -configuration debug -destination 'platform=iOS Simulator,name=iPhone SE,OS=10.2'
+  - xcodebuild -project platforms/ios/HelloCordova.xcodeproj -scheme HelloCordova -destination 'platform=iOS Simulator,name=iPhone SE,OS=10.2'
