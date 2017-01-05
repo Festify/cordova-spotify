@@ -23,7 +23,7 @@ before_script:
 script:
   - cordova plugin add ..
   - cordova build android
-  - cordova build ios --target="iPhone-7, 10.2"
+  - xcodebuild -project platforms/ios/HelloCordova.xcodeproj -scheme HelloCordova -configuration debug -destination 'platform=iOS Simulator,name=iPhone SE,OS=10.2' | xcpretty -tc
 
 notifications:
   email: false
