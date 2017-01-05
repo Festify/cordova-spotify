@@ -6,4 +6,5 @@
 
 @interface AudioStreamingPlaybackDelegate : CordovaEventEmitter <SPTAudioStreamingPlaybackDelegate>
 @end
+
 #endif

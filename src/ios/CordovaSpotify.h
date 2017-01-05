@@ -26,4 +26,4 @@
     - (void) sendResultForCommand:(CDVInvokedUrlCommand*)cmd withError:(NSError*)err andSuccess:(NSString*)success;
 @end
 
-#endif /* CordovaSpotify_h */
+#endif

@@ -19,6 +19,7 @@ NSDictionary *sessionToDict(SPTSession* session) {
 }
 
 @implementation CordovaSpotify
+
 - (void)pluginInitialize {
     self.isLoggedIn = NO;
 
@@ -166,4 +167,5 @@ NSDictionary *sessionToDict(SPTSession* session) {
 
     [self.commandDelegate sendPluginResult: result callbackId: cmd.callbackId];
 }
+
 @end

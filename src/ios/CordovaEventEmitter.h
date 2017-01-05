@@ -15,4 +15,5 @@ NSString* getErrorFromMatrix(NSDictionary *matrix, NSNumber *code);
     -(void) setCallbackId:(NSString *) callbackId;
     -(void) emit:(NSString *)eventName withData:(NSArray *) data;
 @end
+
 #endif
