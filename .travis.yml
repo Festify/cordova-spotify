@@ -3,30 +3,26 @@ language: objective-c
 os: osx
 osx_image: xcode8.2
 
+env:
+  - APP_TARGET=android
+  - APP_TARGET=ios
+
 notifications:
   email: false
   slack:
     rooms:
       - secure: NfkFa9AhtLCfvGjCJsT9Or1gOh8dVdo4Yr8DxwyUI9w0xPjTk+JDw3dTqOv1LKq0uAwAOeoWi+prJZrPtflwXL2X1HfnAvznYRfFb9H1WNDyElrBBKN1i1sNsnzu+ydrmhwSSmFqs0C9jmMhnD+NuVnSLT2G8NMsfs4g9ujSie0mbVucz3wPjkEKNZHO2QqhEBfVGQRqUSAXX9kW5IIMjyM4svpv6OSRpEb31pLcmuCVcFnVzl4VAinLBd4tVtF3PgVjZWJufb5T9TMgHb6HYQJmy5BTFqP9woQHZCaHVx2ECQDMCLkKr3TaE8OWSkbN2SO3YbO7bH8pkH3nWYdJ6IZZVDkwX9v7647JCXEhxocvZ5PK7pBYJZpoY3tb75eadCMMdVPAddrw2y1ogIiWZiNVZU0rAHO6QuXVyC+vFK69urJdIvsqrOJbLFqgh2KGLeniO+nLk7ToiuYzbpqfMydQSeJoHdTgBvaabM3VNAyzbaerSM9yAB8LECWTiAHyW+3KofDPNJRVcsfFd1zUzB9ZN4u3SpqzpAQR+0Q8d1reO+GyTAEfYBcdz6RztcvBtgAzP7qUPDx2Km4ZvKCoRzBsHnrnHCFu5pZszAgmdrd92u3SSDBk3n5yyKeXP2+xwBeva+zwHVz2WSKWklhkULiCtMw+pbs=
 
-before_install:
-  - brew update
-
 install:
-  - brew install android-sdk
-  - export PATH=$PATH:/usr/local/opt/android-sdk/tools:/usr/local/opt/android-sdk/platform-tools
-  - export ANDROID_HOME=/usr/local/opt/android-sdk
-  - export ANDROID_SDK_ROOT=$ANDROID_HOME
-  - (while sleep 3; do echo "y"; done) | android update sdk --no-ui --all --filter platform-tools,tools,build-tools-24.0.2,build-tools-25.0.2,android-24,android-25,extra-android-m2repository
+  - ./travis-install.sh
   - npm install -g cordova
   - npm install
 
 before_script:
   - cordova create HelloCordova
   - cd ./HelloCordova
-  - cordova platform add android ios
+  - cordova platform add $APP_TARGET
 
 script:
   - cordova plugin add ..
-  - cordova build android
-  - xcodebuild CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO CODE_SIGN_ENTITLEMENTS="" CODE_SIGNING_ALLOWED="NO" -project platforms/ios/HelloCordova.xcodeproj -configuration debug -destination 'platform=iOS Simulator,name=iPhone SE,OS=10.2'
+  - ./travis-build.sh
