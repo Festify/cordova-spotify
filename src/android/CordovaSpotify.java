@@ -1,5 +1,7 @@
 package rocks.festify;
 
+import android.util.Log;
+
 import org.apache.cordova.CordovaPlugin;
 import org.apache.cordova.CallbackContext;
 import org.apache.cordova.PluginResult;
@@ -10,6 +12,7 @@ import org.json.JSONObject;
 
 import java.util.HashMap;
 import java.util.Date;
+import java.util.concurrent.TimeUnit;
 import java.text.SimpleDateFormat;
 
 import android.app.Activity;
@@ -31,6 +34,7 @@ import rocks.festify.PlayerEventsHandler;
 
 public class CordovaSpotify extends CordovaPlugin {
     private static final int LOGIN_REQUEST_CODE = 1337;
+    private static final String TAG = "CordovaSpotify";
 
     private String clientId = null;
     private LoginState loginState = null;
@@ -241,6 +245,19 @@ public class CordovaSpotify extends CordovaPlugin {
         // Check if result comes from the correct activity
         if (requestCode == LOGIN_REQUEST_CODE) {
             this.onLoginResult(resultCode, intent);
+        }
+    }
+
+    @Override
+    public void onDestroy() {
+        SpotifyPlayer player = this.player;
+        this.player = null;
+        if (player != null) {
+            try {
+                Spotify.awaitDestroyPlayer(this.cordova.getActivity(), 5, TimeUnit.SECONDS);
+            } catch (InterruptedException e) {
+                Log.wtf(TAG, "Interrupted while destroying Spotify player.", e);
+            }
         }
     }
 
