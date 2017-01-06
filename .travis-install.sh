@@ -2,7 +2,7 @@
 
 set -ev
 
-if [ "$APP_TARGET" -eq "android" ]; then
+if [ "$APP_TARGET" == "android" ]; then
     brew update;
     brew install android-sdk;
     export PATH=$PATH:/usr/local/opt/android-sdk/tools:/usr/local/opt/android-sdk/platform-tools;
