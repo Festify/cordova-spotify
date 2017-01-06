@@ -28,4 +28,4 @@ before_script:
 
 script:
   - cordova plugin add ..
-  - cordova build $APP_TARGET
+  - ../.travis-build.sh
