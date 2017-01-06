@@ -14,7 +14,10 @@ notifications:
       - secure: NfkFa9AhtLCfvGjCJsT9Or1gOh8dVdo4Yr8DxwyUI9w0xPjTk+JDw3dTqOv1LKq0uAwAOeoWi+prJZrPtflwXL2X1HfnAvznYRfFb9H1WNDyElrBBKN1i1sNsnzu+ydrmhwSSmFqs0C9jmMhnD+NuVnSLT2G8NMsfs4g9ujSie0mbVucz3wPjkEKNZHO2QqhEBfVGQRqUSAXX9kW5IIMjyM4svpv6OSRpEb31pLcmuCVcFnVzl4VAinLBd4tVtF3PgVjZWJufb5T9TMgHb6HYQJmy5BTFqP9woQHZCaHVx2ECQDMCLkKr3TaE8OWSkbN2SO3YbO7bH8pkH3nWYdJ6IZZVDkwX9v7647JCXEhxocvZ5PK7pBYJZpoY3tb75eadCMMdVPAddrw2y1ogIiWZiNVZU0rAHO6QuXVyC+vFK69urJdIvsqrOJbLFqgh2KGLeniO+nLk7ToiuYzbpqfMydQSeJoHdTgBvaabM3VNAyzbaerSM9yAB8LECWTiAHyW+3KofDPNJRVcsfFd1zUzB9ZN4u3SpqzpAQR+0Q8d1reO+GyTAEfYBcdz6RztcvBtgAzP7qUPDx2Km4ZvKCoRzBsHnrnHCFu5pZszAgmdrd92u3SSDBk3n5yyKeXP2+xwBeva+zwHVz2WSKWklhkULiCtMw+pbs=
 
 install:
-  - source ./.travis-install.sh
+  - export PATH=$PATH:/usr/local/opt/android-sdk/tools:/usr/local/opt/android-sdk/platform-tools
+  - export ANDROID_HOME=/usr/local/opt/android-sdk
+  - export ANDROID_SDK_ROOT=$ANDROID_HOME
+  - ./.travis-install.sh
   - npm install -g cordova
   - npm install
 
@@ -25,4 +28,4 @@ before_script:
 
 script:
   - cordova plugin add ..
-  - source ../.travis-build.sh
+  - ../.travis-build.sh
