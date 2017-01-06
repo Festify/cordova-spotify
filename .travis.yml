@@ -17,7 +17,6 @@ install:
   - export ANDROID_SDK_ROOT=$ANDROID_HOME
   - ./.travis-install.sh
   - npm install -g cordova
-  - npm install
 
 before_script:
   - cordova create HelloCordova
