@@ -5,5 +5,6 @@ set -ev
 if [ "$APP_TARGET" == "android" ]; then
     cordova build android;
 else
-    xcodebuild -xcconfig ./platforms/ios/cordova/build-debug.xcconfig -workspace ./platforms/ios/HelloCordova.xcworkspace -scheme HelloCordova -configuration Debug -sdk iphonesimulator -destination 'platform=iOS Simulator,name=iPhone SE,OS=10.2' build CONFIGURATION_BUILD_DIR=./platforms/ios/build/emulator CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO CODE_SIGN_ENTITLEMENTS="" CODE_SIGNING_ALLOWED="NO";
+    # 63A0BA5F-3911-496F-BF2E-512830B4AD7F is iPhone SE on iOS 10.2
+    xcodebuild -xcconfig ./platforms/ios/cordova/build-debug.xcconfig -workspace ./platforms/ios/HelloCordova.xcworkspace -scheme HelloCordova -configuration Debug -sdk iphonesimulator -destination 'id=63A0BA5F-3911-496F-BF2E-512830B4AD7F' build CONFIGURATION_BUILD_DIR=./platforms/ios/build/emulator CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO CODE_SIGN_ENTITLEMENTS="" CODE_SIGNING_ALLOWED="NO";
 fi
