@@ -39,5 +39,9 @@ exports.authenticate = function (options) {
     }
 
     return platform.authenticate(options)
-        .then(authData => (new Session(authData)).registerEvents());
+        .then(authData => (new Session(authData)).registerEvents())
+        // Player is not ready to play when the SDK fires the callback.
+        // Therefore we introduce some delay, so apps can start playing immediately
+        // when the promise resolves.
+        .then(session => new Promise(resolve => setTimeout(() => resolve(session), 2000)));
 };
