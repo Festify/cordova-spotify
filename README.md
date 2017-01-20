@@ -1,4 +1,4 @@
-# Cordova Spotify SDK Plugin (Alpha)
+# Cordova Spotify SDK Plugin (Beta)
 
 An [Apache Cordova](https://cordova.apache.org/) plugin providing a thin wrapper over the Spotify SDK for iOS and Android.
 
@@ -8,7 +8,7 @@ This plugin provides a very thin layer over the authentication and playback func
 
 ## Stability
 
-This plugin is currently in development, but will be used in the new [Festify](https://github.com/Festify/app). So once Festify is out, you can assume this library to be reasonably stable. We will try to fix bugs as soon as we find them.
+This plugin is currently in beta. This means its reasonably stable but hasn't seen much production use yet. This plugin will be used in the new [Festify](https://github.com/Festify/app), so it will be production-ready once Festify is released. We will fix bugs as soon as we find them.
 
 ## Contributing
 
