@@ -1,0 +1,28 @@
+{
+  "name": "spotify-oauth-token-api",
+  "version": "1.0.0",
+  "description": "The AWS lambda service that is responsible for dealing with OAuth token refresh and exchange.",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Festify/cordova-spotify.git"
+  },
+  "keywords": [
+    "cordova",
+    "spotify",
+    "token",
+    "exchange",
+    "oauth"
+  ],
+  "author": "Festify Dev Team <git@getfestify.de>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Festify/cordova-spotify/issues"
+  },
+  "homepage": "https://github.com/Festify/cordova-spotify#readme",
+  "dependencies": {
+    "dotenv": "^2.0.0",
+    "es6-promise": "^4.0.5",
+    "qs": "^6.3.0",
+    "request": "^2.79.0"
+  }
+}
