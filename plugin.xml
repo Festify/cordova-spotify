@@ -50,6 +50,12 @@
             </feature>
         </config-file>
 
+        <config-file target="*-Info.plist" parent="UIBackgroundModes">
+            <array>
+                <string>audio</string>
+            </array>
+        </config-file>
+
         <header-file src="src/ios/CordovaSpotify.h" />
         <source-file src="src/ios/CordovaSpotify.m" />
         <header-file src="src/ios/CordovaEventEmitter.h" />

@@ -5,6 +5,7 @@
 #import <SpotifyAudioPlayback/SpotifyAudioPlayback.h>
 #import <SpotifyAuthentication/SpotifyAuthentication.h>
 #import <SafariServices/SafariServices.h>
+#import <AVFoundation/AVFoundation.h>
 
 #import "AudioStreamingDelegate.h"
 #import "AudioStreamingPlaybackDelegate.h"
