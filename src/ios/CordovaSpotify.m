@@ -40,6 +40,13 @@ NSDictionary *sessionToDict(SPTSession* session) {
 
     __weak CordovaSpotify* _self = self;
 
+    // Setup AVAudioSession for Background Audio
+    NSError *categoryError = nil;
+    [[AVAudioSession sharedInstance] setCategory: AVAudioSessionCategoryPlayback error:&categoryError];
+    if (categoryError) {
+        [_self sendResultForCommand:command withError:categoryError andSuccess:nil];
+    }
+
     SPTAuthCallback cb = ^(NSError* err, SPTSession* spotSession) {
         CDVPluginResult* pluginResult;
 
@@ -110,6 +117,22 @@ NSDictionary *sessionToDict(SPTSession* session) {
 
 - (void) play:(CDVInvokedUrlCommand*)command {
     __weak CordovaSpotify* _self = self;
+
+    //activation of audio session
+    NSError *activationError = nil;
+    BOOL success = [[AVAudioSession sharedInstance] setActive: YES error: &activationError];
+    if (!success) {
+        if (activationError) {
+            [_self sendResultForCommand:command withError:activationError andSuccess:nil];
+        } else {
+            [_self sendResultForCommand:command
+                              withError:[NSError errorWithDomain:@"AudioSession" code:-1 userInfo:@{
+                                      NSLocalizedDescriptionKey: @"Audio session could not be activated"
+                              }]
+                             andSuccess:nil];
+        }
+    }
+
     SPTErrorableOperationCallback cb = ^(NSError* err) {
         [_self sendResultForCommand:command withError:err andSuccess:nil];
     };
