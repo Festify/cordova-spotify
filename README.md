@@ -47,3 +47,5 @@ You can then deploy the functions to AWS:
 cd oauth-token-api
 serverless deploy
 ```
+
+Also, you need to register the client callback protocol inside the App Info.plist so that iOS knows which app to start when it is redirected when the authentication is done. Take a look at [this repository](https://github.com/Festify/festify-cordova-scheme-helper) to see how it's done.
