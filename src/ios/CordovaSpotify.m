@@ -118,7 +118,7 @@ NSDictionary *sessionToDict(SPTSession* session) {
 - (void) play:(CDVInvokedUrlCommand*)command {
     __weak CordovaSpotify* _self = self;
 
-    //activation of audio session
+    // Take over audio session
     NSError *activationError = nil;
     BOOL success = [[AVAudioSession sharedInstance] setActive: YES error: &activationError];
     if (!success) {
