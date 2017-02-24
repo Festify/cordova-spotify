@@ -123,9 +123,9 @@ NSDictionary *sessionToDict(SPTSession* session) {
     BOOL success = [[AVAudioSession sharedInstance] setActive: YES error: &activationError];
     if (!success) {
         if (activationError) {
-            [_self sendResultForCommand:command withError:activationError andSuccess:nil];
+            [self sendResultForCommand:command withError:activationError andSuccess:nil];
         } else {
-            [_self sendResultForCommand:command
+            [self sendResultForCommand:command
                               withError:[NSError errorWithDomain:@"AudioSession" code:-1 userInfo:@{
                                       NSLocalizedDescriptionKey: @"Audio session could not be activated"
                               }]
