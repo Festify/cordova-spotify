@@ -1,4 +1,3 @@
-require('es6-promise/auto');
 require('isomorphic-fetch');
 
 const conf = require('../lib/const.js');
