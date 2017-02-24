@@ -131,6 +131,7 @@ NSDictionary *sessionToDict(SPTSession* session) {
                               }]
                              andSuccess:nil];
         }
+        return;
     }
 
     SPTErrorableOperationCallback cb = ^(NSError* err) {
