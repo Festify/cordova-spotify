@@ -1,5 +1,7 @@
 # Cordova Spotify SDK Plugin (Beta)
 
+[![Greenkeeper badge](https://badges.greenkeeper.io/Festify/cordova-spotify.svg)](https://greenkeeper.io/)
+
 An [Apache Cordova](https://cordova.apache.org/) plugin providing a thin wrapper over the Spotify SDK for iOS and Android.
 
 ## Features
