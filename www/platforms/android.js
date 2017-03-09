@@ -34,7 +34,8 @@ function initSession(clientId, authData) {
 
 module.exports = {
     authenticate: function (options) {
-        if (!options.urlScheme || !options.clientId || !options.scopes || !options.tokenSwapUrl) {
+        if (!options.urlScheme || !options.clientId || !options.scopes ||
+            !options.tokenSwapUrl || !options.tokenRefreshUrl) {
             return Promise.reject(MISSING_PARAMETERS_ERROR);
         }
 
