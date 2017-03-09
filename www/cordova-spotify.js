@@ -46,5 +46,5 @@ exports.authenticate = function (options) {
 
 exports.login = function (options) {
     return platform.login(options)
-        .then(initSession);
+        .then(authData => authData ? initSession(authData) : null);
 }
