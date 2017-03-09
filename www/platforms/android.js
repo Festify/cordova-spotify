@@ -4,7 +4,6 @@ const conf = require('../lib/const.js');
 const exec = require('../lib/execPromise.js');
 const qs = require('qs');
 
-const MISSING_PARAMETERS_ERROR = "Missing parameters!";
 const TOKEN_SERVICE_ERROR = "Token swap service did not return a successful response code.";
 
 function decode(msg) {
@@ -58,7 +57,7 @@ module.exports = {
     },
     login: function (options) {
         if (!options.clientId || !options.tokenRefreshUrl) {
-            return Promise.reject(MISSING_PARAMETERS_ERROR);
+            return Promise.reject(conf.MISSING_PARAMETERS_ERROR);
         }
 
         const refreshToken = localStorage.getItem(conf.REFRESH_TOKEN_LS_NAME);
