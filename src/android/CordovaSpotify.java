@@ -33,7 +33,7 @@ import rocks.festify.ConnectionEventsHandler;
 import rocks.festify.PlayerEventsHandler;
 
 public class CordovaSpotify extends CordovaPlugin {
-    private static final int LOGIN_REQUEST_CODE = 1337;
+    private static final int LOGIN_REQUEST_CODE = 8139;
     private static final String TAG = "CordovaSpotify";
 
     private CallbackContext loginCallbackContext = null;
