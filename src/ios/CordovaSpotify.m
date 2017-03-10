@@ -23,6 +23,8 @@ NSDictionary *sessionToDict(SPTSession* session) {
 - (void)pluginInitialize {
     self.isLoggedIn = NO;
 
+    [SPTAuth defaultInstance].sessionUserDefaultsKey = @"CordovaSpotifySession";
+
     // Initialize delegates for event handling
     __weak id <CDVCommandDelegate> _commandDelegate = self.commandDelegate;
     self.audioStreamingDelegate = [AudioStreamingDelegate eventEmitterWithCommandDelegate: _commandDelegate];
@@ -38,40 +40,17 @@ NSDictionary *sessionToDict(SPTSession* session) {
     NSString* clientId  = [command.arguments objectAtIndex:1];
     NSArray* scopes     = [command.arguments objectAtIndex:2];
 
-    __weak CordovaSpotify* _self = self;
-
     // Setup AVAudioSession for Background Audio
     NSError *categoryError = nil;
     [[AVAudioSession sharedInstance] setCategory: AVAudioSessionCategoryPlayback error:&categoryError];
     if (categoryError) {
-        [_self sendResultForCommand:command withError:categoryError andSuccess:nil];
+        [self sendResultForCommand:command withError:categoryError andSuccess:nil];
+        return;
     }
-
-    SPTAuthCallback cb = ^(NSError* err, SPTSession* spotSession) {
-        CDVPluginResult* pluginResult;
-
-        if (err != nil || ![_self.player startWithClientId: clientId error: &err]) {
-            pluginResult = [CDVPluginResult
-                    resultWithStatus: CDVCommandStatus_ERROR
-                     messageAsString: err.localizedDescription];
-        } else {
-            _self.session = spotSession;
-            [_self.player loginWithAccessToken: [spotSession accessToken]];
-
-            pluginResult = [CDVPluginResult
-                    resultWithStatus: CDVCommandStatus_OK
-                 messageAsDictionary: sessionToDict(spotSession)];
-        }
-
-        [_self.commandDelegate
-                sendPluginResult: pluginResult
-                      callbackId: command.callbackId];
-    };
 
     SPTAuth* auth = [SPTAuth defaultInstance];
     auth.clientID = clientId;
     auth.redirectURL = [NSURL URLWithString: [NSString stringWithFormat:@"%@://callback", urlScheme]];
-    auth.sessionUserDefaultsKey = @"FestifySession";
     auth.requestedScopes = scopes;
 
     if ([command.arguments count] >= 5 &&
@@ -85,6 +64,12 @@ NSDictionary *sessionToDict(SPTSession* session) {
 
     NSURL *authUrl = [auth spotifyWebAuthenticationURL];
     SFSafariViewController* authViewController = [[SFSafariViewController alloc] initWithURL:authUrl];
+
+    __weak CordovaSpotify* _self = self;
+
+    SPTAuthCallback cb = ^(NSError* err, SPTSession* spotSession) {
+        [_self initSession:spotSession withClientId: clientId andError:err andCommand:command];
+    };
 
     __block id observer = [[NSNotificationCenter defaultCenter]
             addObserverForName: CDVPluginHandleOpenURLNotification
@@ -104,6 +89,25 @@ NSDictionary *sessionToDict(SPTSession* session) {
                     }];
 
     [self.viewController presentViewController:authViewController animated:YES completion:nil];
+}
+
+- (void) login:(CDVInvokedUrlCommand*)command {
+    NSString* clientId = [command.arguments objectAtIndex:0];
+    NSString* tokenRefreshURL = [command.arguments objectAtIndex:1];
+
+    [SPTAuth defaultInstance].tokenRefreshURL = [NSURL URLWithString:tokenRefreshURL];
+
+    SPTSession* session = [[SPTAuth defaultInstance] session];
+    if(!session) {
+        [self sendResultForCommand:command withError:nil andSuccess:nil];
+        return;
+    }
+
+    __weak CordovaSpotify* _self = self;
+
+    [[SPTAuth defaultInstance] renewSession: session callback: ^(NSError* err, SPTSession* spotSession) {
+        [_self initSession:spotSession withClientId: clientId andError:err andCommand:command];
+    }];
 }
 
 - (void) getPosition:(CDVInvokedUrlCommand*)command {
@@ -174,6 +178,28 @@ NSDictionary *sessionToDict(SPTSession* session) {
 
 - (void) audioStreamingDidLogout:(SPTAudioStreamingController *)audioStreaming {
     self.isLoggedIn = NO;
+}
+
+- (void) initSession:(SPTSession*)session withClientId:(NSString*)clientId andError:(NSError*)err andCommand:(CDVInvokedUrlCommand*)command {
+    CDVPluginResult* pluginResult;
+
+    if (err != nil || ![self.player startWithClientId: clientId error: &err]) {
+        pluginResult = [CDVPluginResult
+                resultWithStatus: CDVCommandStatus_ERROR
+                 messageAsString: err.localizedDescription];
+    } else {
+        [self.player loginWithAccessToken: [session accessToken]];
+
+        [SPTAuth defaultInstance].session = session;
+
+        pluginResult = [CDVPluginResult
+                resultWithStatus: CDVCommandStatus_OK
+             messageAsDictionary: sessionToDict(session)];
+    }
+
+    [self.commandDelegate
+            sendPluginResult: pluginResult
+                  callbackId: command.callbackId];
 }
 
 - (void) sendResultForCommand:(CDVInvokedUrlCommand*)cmd withError:(NSError*) err andSuccess:(NSString*) success {

@@ -14,16 +14,17 @@
     @property (nonatomic) bool isLoggedIn;
     @property (nonatomic) AudioStreamingDelegate *audioStreamingDelegate;
     @property (nonatomic) AudioStreamingPlaybackDelegate *audioStreamingPlaybackDelegate;
-    @property (nonatomic, strong) SPTSession* session;
     @property (nonatomic, strong) SPTAudioStreamingController* player;
 
     - (void) pluginInitialize;
 
     - (void) authenticate:(CDVInvokedUrlCommand*)command;
+    - (void) login:(CDVInvokedUrlCommand*)command;
     - (void) play:(CDVInvokedUrlCommand*)command;
     - (void) pause:(CDVInvokedUrlCommand*)command;
     - (void) registerEventsListener:(CDVInvokedUrlCommand*)command;
 
+    - (void) initSession:(SPTSession*)session withClientId:(NSString*)clientId andError:(NSError*)err andCommand:(CDVInvokedUrlCommand*)command;
     - (void) sendResultForCommand:(CDVInvokedUrlCommand*)cmd withError:(NSError*)err andSuccess:(NSString*)success;
 @end
 
