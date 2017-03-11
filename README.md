@@ -28,11 +28,11 @@ An npm-based installation as well as API documentation will be provided at a lat
 
 Note: Make sure your installation path doesn't contain any spaces.
 
-## OAuth Code Grant Flow
+## Token Exchange Service
 
-The Spotify SDK needs some server code because you don't want to login your users repeatedly every hour: [Documentation](https://developer.spotify.com/technologies/spotify-ios-sdk/token-swap-refresh/)
+The Spotify SDK needs some server code for the OAuth authentication because this plugin uses the authorization code flow only. This is because you probably don't want your users to have to login repeatedly every hour. Take a look at the Spotify [documentation](https://developer.spotify.com/web-api/authorization-guide/#authorization-code-flow) for more information.
 
-To implement the endpoints for `tokenSwapURL` and `tokenRefreshURL` we built a [Serverless](https://serverless.com) service that you can deploy to AWS Lambda. Make sure you [install the Serverless Framework properly](https://serverless.com/framework/docs/providers/aws/guide/installation/)!
+To easily implement the endpoints for the token swap and token refresh service, we built a [Serverless](https://serverless.com) service for [AWS Lambda](https://aws.amazon.com/lambda/). Make sure you [install the Serverless Framework properly](https://serverless.com/framework/docs/providers/aws/guide/installation/)!
 
 For the execution of the functions to work you need to set some environmental configuration in the file `oauth-token-api/.env`
 
@@ -43,7 +43,7 @@ CLIENT_CALLBACK_URL="<The callback url of your app>" # e.g. "festify-spotify://c
 ENCRYPTION_SECRET="<Secret used to encrypt the refresh token - please generate>"
 ```
 
-You can then deploy the functions to AWS:
+You can then deploy the functions like this:
 
 ```bash
 cd oauth-token-api
