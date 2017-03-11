@@ -26,21 +26,21 @@ NSString* getErrorFromMatrix(NSDictionary *matrix, NSNumber *code) {
 }
 
 - (void)emit:(NSString *)eventName withData:(NSArray *) data {
-    if(self.eventCallbackId == nil) {
+    if (self.eventCallbackId == nil) {
         return;
     }
 
     NSDictionary *params = @{
-            @"name": eventName,
-            @"args": data
+        @"name": eventName,
+        @"args": data
     };
 
-    CDVPluginResult *result = [CDVPluginResult
-            resultWithStatus: CDVCommandStatus_OK
-         messageAsDictionary: params];
+    CDVPluginResult *result = [CDVPluginResult resultWithStatus: CDVCommandStatus_OK
+                                            messageAsDictionary: params];
     [result setKeepCallbackAsBool:YES];
 
-    [self.commandDelegate sendPluginResult: result callbackId: self.eventCallbackId];
+    [self.commandDelegate sendPluginResult: result
+                                callbackId: self.eventCallbackId];
 }
 
 @end

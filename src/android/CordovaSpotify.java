@@ -33,11 +33,10 @@ import rocks.festify.ConnectionEventsHandler;
 import rocks.festify.PlayerEventsHandler;
 
 public class CordovaSpotify extends CordovaPlugin {
-    private static final int LOGIN_REQUEST_CODE = 1337;
+    private static final int LOGIN_REQUEST_CODE = 8139;
     private static final String TAG = "CordovaSpotify";
 
-    private String clientId = null;
-    private LoginState loginState = null;
+    private CallbackContext loginCallbackContext = null;
     private SpotifyPlayer player = null;
 
     private ConnectionEventsHandler connectionEventsHandler = new ConnectionEventsHandler();
@@ -53,8 +52,9 @@ public class CordovaSpotify extends CordovaPlugin {
             this.authenticate(callbackContext, clientId, urlScheme, scopes);
             return true;
         } else if ("initSession".equals(action)) {
-            String accessToken = args.getString(0);
-            this.initSession(callbackContext, accessToken);
+            String clientId = args.getString(0);
+            String accessToken = args.getString(1);
+            this.initSession(callbackContext, clientId, accessToken);
             return true;
         } else if ("getPosition".equals(action)) {
             this.getPosition(callbackContext);
@@ -99,17 +99,15 @@ public class CordovaSpotify extends CordovaPlugin {
         }
         builder.setScopes(scopes);
 
-        this.loginState = new LoginState(callbackContext, clientId);
-        this.clientId = clientId;
+        this.loginCallbackContext = callbackContext;
 
         cordova.setActivityResultCallback(this);
         AuthenticationClient.openLoginActivity(this.cordova.getActivity(), LOGIN_REQUEST_CODE, builder.build());
     }
 
-    private void initSession(final CallbackContext callbackContext, String accessToken) {
-        String clientId = this.clientId;
+    private void initSession(final CallbackContext callbackContext, String clientId, String accessToken) {
         if (clientId == null || clientId.length() < 1) {
-            callbackContext.error("Invalid clientId. Call authenticate first!");
+            callbackContext.error("Invalid clientId. Got an empty string.");
             return;
         }
 
@@ -262,43 +260,19 @@ public class CordovaSpotify extends CordovaPlugin {
     }
 
     private void onLoginResult(int resultCode, Intent intent) {
-        final LoginState state = this.loginState;
-        if (!LoginState.isValid(state)) {
+        final CallbackContext cb = this.loginCallbackContext;
+        if (cb == null) {
             return;
         }
-        this.loginState = null;
+        this.loginCallbackContext = null;
 
         final AuthenticationResponse response = AuthenticationClient.getResponse(resultCode, intent);
         if (response.getType() != AuthenticationResponse.Type.CODE) {
-            state.getLoginCallbackContext().error("Wrong response type: " + response.getType().toString());
+            cb.error("Wrong response type: " + response.getType().toString());
         } else {
             HashMap<String, String> responseMap = new HashMap();
             responseMap.put("code", response.getCode());
-            state.getLoginCallbackContext().success(new JSONObject(responseMap));
+            cb.success(new JSONObject(responseMap));
         }
-    }
-}
-
-class LoginState {
-    private CallbackContext loginCallbackContext = null;
-    private String clientId = "";
-
-    public LoginState(CallbackContext loginCallbackContext, String clientId) {
-        this.loginCallbackContext = loginCallbackContext;
-        this.clientId = clientId;
-    }
-
-    public CallbackContext getLoginCallbackContext() {
-        return loginCallbackContext;
-    }
-
-    public String getClientId() {
-        return clientId;
-    }
-
-    public static boolean isValid(LoginState state) {
-        return state != null &&
-               state.loginCallbackContext != null &&
-               (state.clientId != null && state.clientId.length() > 0);
     }
 }

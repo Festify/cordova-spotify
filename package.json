@@ -1,6 +1,6 @@
 {
   "name": "cordova-spotify",
-  "version": "0.1.1",
+  "version": "0.2.0",
   "description": "Spotify SDK Cordova bindings for Festify",
   "repository": {
     "type": "git",
@@ -12,7 +12,7 @@
     "sdk",
     "festify"
   ],
-  "author": "Festify Dev Team <mail@festify.rocks>",
+  "author": "Festify Dev Team <mail+cordova-spotify@festify.rocks>",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/Festify/cordova-spotify/issues"
