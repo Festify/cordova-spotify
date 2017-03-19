@@ -1,6 +1,6 @@
 {
   "name": "cordova-spotify",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "Spotify SDK Cordova bindings for Festify",
   "repository": {
     "type": "git",
