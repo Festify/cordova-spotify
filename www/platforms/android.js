@@ -46,6 +46,9 @@ module.exports = {
         ])
             .then(res => fetch(options.tokenSwapUrl, {
                 body: qs.stringify({ code: res.code }),
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                },
                 method: 'POST'
             }))
             .then(decode(TOKEN_SERVICE_ERROR))
@@ -68,6 +71,9 @@ module.exports = {
 
         return fetch(options.tokenRefreshUrl, {
             body: qs.stringify({ refresh_token: refreshToken }),
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded'
+            },
             method: 'POST'
         })
             .then(decode(TOKEN_SERVICE_ERROR))
