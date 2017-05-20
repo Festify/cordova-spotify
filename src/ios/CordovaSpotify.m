@@ -25,6 +25,9 @@ NSDictionary *sessionToDict(SPTSession* session) {
 
     [SPTAuth defaultInstance].sessionUserDefaultsKey = @"CordovaSpotifySession";
 
+    // Tell iOS to play audio even in background and when the ringer is silent
+    [[AVAudioSession sharedInstance] setCategory:AVAudioSessionCategoryPlayback error:nil];
+
     // Initialize delegates for event handling
     __weak id <CDVCommandDelegate> _commandDelegate = self.commandDelegate;
     self.audioStreamingDelegate = [AudioStreamingDelegate eventEmitterWithCommandDelegate: _commandDelegate];
