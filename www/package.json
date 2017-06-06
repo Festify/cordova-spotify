@@ -19,7 +19,6 @@
   },
   "homepage": "https://github.com/Festify/cordova-spotify#readme",
   "dependencies": {
-    "es6-promise": "^4.0.5",
     "eventemitter3": "^2.0.2",
     "isomorphic-fetch": "^2.2.1",
     "qs": "^6.3.0"

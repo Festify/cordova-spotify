@@ -1,5 +1,4 @@
 const _exec = cordova.exec;
-const Promise = require('es6-promise');
 
 module.exports = function (methodName, args) {
     if (!methodName) {

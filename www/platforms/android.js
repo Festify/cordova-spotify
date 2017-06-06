@@ -2,7 +2,6 @@ require('isomorphic-fetch');
 
 const conf = require('../lib/const.js');
 const exec = require('../lib/execPromise.js');
-const Promise = require('es6-promise');
 const qs = require('qs');
 
 const TOKEN_SERVICE_ERROR = "Token swap service did not return a successful response code.";

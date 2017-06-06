@@ -8,6 +8,8 @@
         <merges target="cordova.plugins" />
     </js-module>
 
+    <dependency id="es6-promise-plugin"/>
+
     <platform name="android">
         <hook type="before_plugin_install" src="install-android.sh" />
 
