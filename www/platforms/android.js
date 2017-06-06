@@ -35,7 +35,7 @@ module.exports = {
     authenticate: function (options) {
         if (!options.urlScheme || !options.clientId || !options.scopes ||
             !options.tokenSwapUrl || !options.tokenRefreshUrl) {
-            return Promise.reject(MISSING_PARAMETERS_ERROR);
+            return Promise.reject(conf.MISSING_PARAMETERS_ERROR);
         }
 
         return exec('authenticate', [
