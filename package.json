@@ -1,21 +1,36 @@
 {
   "name": "cordova-spotify",
   "version": "0.2.2",
-  "description": "Spotify SDK Cordova bindings for Festify",
+  "description": "Spotify SDK bindings for Cordova Applications",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/Festify/cordova-spotify.git"
   },
+  "engines": {
+    "cordovaDependencies": {
+      "0.2.2": {
+          "cordova": "^6.0.0",
+          "es6-promise-plugin": "^4.1.0"
+      }
+    }
+  },
   "keywords": [
-    "cordova",
+    "ecosystem:cordova",
+    "cordova-android",
+    "cordova-ios",
     "spotify",
-    "sdk",
-    "festify"
+    "sdk"
   ],
   "author": "Festify Dev Team <mail+cordova-spotify@festify.rocks>",
-  "license": "MIT",
+  "contributors": [
+    "Moritz Gunz <moritz.gunz@gmail.com>",
+    "Leo Bernard <admin@leolabs.org>",
+    "Marcus Weiner <melodie124@gmail.com>"
+  ],
+  "license": "LGPL-3.0",
   "bugs": {
-    "url": "https://github.com/Festify/cordova-spotify/issues"
+    "url": "https://github.com/Festify/cordova-spotify/issues",
+    "email": "mail+cordova-spotify@festify.rocks"
   },
   "homepage": "https://github.com/Festify/cordova-spotify#readme"
 }
