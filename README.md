@@ -19,9 +19,7 @@ Pull requests are very welcome! Please use the [gitmoji](https://gitmoji.carlosc
 ## Installation
 
 ```bash
-git clone https://github.com/Festify/cordova-spotify
-cd ./MyCordovaProject
-cordova plugin add ../cordova-spotify
+cordova plugin add cordova-spotify
 ```
 
 API documentation will be provided at a later stage when the stability has improved.
