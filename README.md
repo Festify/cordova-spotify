@@ -24,7 +24,7 @@ cd ./MyCordovaProject
 cordova plugin add ../cordova-spotify
 ```
 
-An npm-based installation as well as API documentation will be provided at a later stage when the stability has improved.
+API documentation will be provided at a later stage when the stability has improved.
 
 Note: Make sure your installation path doesn't contain any spaces.
 
