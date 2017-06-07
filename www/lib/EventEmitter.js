@@ -1,5 +1,4 @@
 const Emitter = require('eventemitter3');
-const Promise = require('es6-promise');
 
 class EventEmitter extends Emitter {
     constructor() {

@@ -1,6 +1,5 @@
 const conf = require('../lib/const.js');
 const exec = require('../lib/execPromise.js');
-const Promise = require('es6-promise');
 
 module.exports = {
     authenticate: function (options) {

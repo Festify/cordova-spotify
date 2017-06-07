@@ -2,7 +2,6 @@ require('isomorphic-fetch');
 
 const conf = require('../lib/const.js');
 const exec = require('../lib/execPromise.js');
-const Promise = require('es6-promise');
 const qs = require('qs');
 
 const TOKEN_SERVICE_ERROR = "Token swap service did not return a successful response code.";
@@ -36,7 +35,7 @@ module.exports = {
     authenticate: function (options) {
         if (!options.urlScheme || !options.clientId || !options.scopes ||
             !options.tokenSwapUrl || !options.tokenRefreshUrl) {
-            return Promise.reject(MISSING_PARAMETERS_ERROR);
+            return Promise.reject(conf.MISSING_PARAMETERS_ERROR);
         }
 
         return exec('authenticate', [
@@ -46,6 +45,9 @@ module.exports = {
         ])
             .then(res => fetch(options.tokenSwapUrl, {
                 body: qs.stringify({ code: res.code }),
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                },
                 method: 'POST'
             }))
             .then(decode(TOKEN_SERVICE_ERROR))
@@ -68,6 +70,9 @@ module.exports = {
 
         return fetch(options.tokenRefreshUrl, {
             body: qs.stringify({ refresh_token: refreshToken }),
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded'
+            },
             method: 'POST'
         })
             .then(decode(TOKEN_SERVICE_ERROR))
