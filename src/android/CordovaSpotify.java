@@ -46,10 +46,10 @@ public class CordovaSpotify extends CordovaPlugin {
     public boolean execute(String action, JSONArray args, CallbackContext callbackContext)
             throws JSONException {
         if ("authenticate".equals(action)) {
-            String urlScheme = args.getString(0);
+            String redirectUrl = args.getString(0);
             String clientId = args.getString(1);
             JSONArray scopes = args.getJSONArray(2);
-            this.authenticate(callbackContext, clientId, urlScheme, scopes);
+            this.authenticate(callbackContext, clientId, redirectUrl, scopes);
             return true;
         } else if ("initSession".equals(action)) {
             String clientId = args.getString(0);
@@ -82,11 +82,11 @@ public class CordovaSpotify extends CordovaPlugin {
      * API Functions
      */
 
-    private void authenticate(CallbackContext callbackContext, String clientId, String urlScheme, JSONArray jsonScopes) {
+    private void authenticate(CallbackContext callbackContext, String clientId, String redirectUrl, JSONArray jsonScopes) {
         AuthenticationRequest.Builder builder = new AuthenticationRequest.Builder(
             clientId,
             AuthenticationResponse.Type.CODE,
-            urlScheme + "://callback"
+            redirectUrl
         );
         String[] scopes = new String[jsonScopes.length()];
         for (int i = 0; i < jsonScopes.length(); i++) {

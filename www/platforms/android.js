@@ -33,13 +33,13 @@ function initSession(clientId, authData) {
 
 module.exports = {
     authenticate: function (options) {
-        if (!options.urlScheme || !options.clientId || !options.scopes ||
+        if (!options.redirectUrl || !options.clientId || !options.scopes ||
             !options.tokenSwapUrl || !options.tokenRefreshUrl) {
             return Promise.reject(conf.MISSING_PARAMETERS_ERROR);
         }
 
         return exec('authenticate', [
-            options.urlScheme,
+            options.redirectUrl,
             options.clientId,
             options.scopes
         ])
