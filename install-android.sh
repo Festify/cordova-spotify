@@ -19,7 +19,7 @@ else
     echo "Skipping streaming SDK download since it's alredy there."
 fi
 
-cd $(dirname $0)/src/android/spotify-auth
+cd "$(dirname $0)/src/android/spotify-auth"
 echo "include ':auth-lib'" > settings.gradle
 
 if [ ! -f "auth-lib/build/outputs/aar/spotify-android-auth-1.0.0.aar" ]; then
