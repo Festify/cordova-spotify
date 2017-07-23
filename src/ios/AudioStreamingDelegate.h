@@ -6,6 +6,9 @@
 #import "CordovaSpotifyEventEmitter.h"
 
 @interface AudioStreamingDelegate : CordovaSpotifyEventEmitter <SPTAudioStreamingDelegate>
+    @property (nonatomic, copy) void (^loginCallback)(void);
+
+    - (void) handleLoginWithCallback: (void (^)(void))callback;
 @end
 
 #endif

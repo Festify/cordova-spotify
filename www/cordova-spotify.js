@@ -1,49 +1,46 @@
-const EventEmitter = require('./lib/EventEmitter.js');
-const exec = require('./lib/execPromise.js');
-const platform = require('./platforms');
+import exec from './lib/execPromise.js';
+import Emitter from 'eventemitter3';
 
-class Session extends EventEmitter {
-    constructor(sessionObject) {
-        super();
+let emitter;
+let emitterRegistered = false;
 
-        if (!sessionObject) {
-            throw new Error("Missing native session object.");
-        }
-
-        Object.assign(this, sessionObject);
-    }
-
-    getPosition() {
-        return exec('getPosition');
-    }
-
-    logout() {
-        return exec('logout');
-    }
-
-    play(trackUri) {
-        return exec('play', [trackUri]);
-    }
-
-    pause() {
-        return exec('pause');
-    }
+export function play(trackUri, {token, clientId}) {
+    return exec('play', [trackUri, token, clientId]);
 }
 
-function initSession(authData) {
-    return (new Session(authData)).registerEvents()
-        // Player is not ready to play when the SDK fires the callback.
-        // Therefore we introduce some delay, so apps can start playing immediately
-        // when the promise resolves.
-        .then(session => new Promise(resolve => setTimeout(() => resolve(session), 2000)));
+export function getPosition() {
+    return exec('getPosition');
 }
 
-exports.authenticate = function (options) {
-    return platform.authenticate(options)
-        .then(initSession)
-};
+export function pause() {
+    return exec('pause');
+}
 
-exports.login = function (options) {
-    return platform.login(options)
-        .then(authData => authData ? initSession(authData) : null);
+export function resume() {
+    return exec('resume');
+}
+
+export function getEventEmitter() {
+    if(emitter) {
+        return Promise.resolve(emitter);
+    }
+
+    emitter = new Emitter();
+
+    return new Promise((res, rej) => {
+        // Delay callbacks from native code because the Spotify SDKs
+        // cannot cope with synchronous invocation from inside of an event
+        // handler function.
+        const resolve = v => setTimeout(() => res(v));
+        const reject = e => setTimeout(() => rej(e));
+
+        cordova.exec(event => {
+            if (!emitterRegistered) {
+                emitterRegistered = true;
+                resolve(this);
+            } else {
+                setTimeout(() => emitter.emit(event.name, ...(event.args || [])));
+            }
+        }, err => reject(err), 'SpotifyConnector', 'registerEventsListener', []);
+    });
 }
