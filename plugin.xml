@@ -60,8 +60,8 @@
 
         <header-file src="src/ios/CordovaSpotify.h" />
         <source-file src="src/ios/CordovaSpotify.m" />
-        <header-file src="src/ios/CordovaEventEmitter.h" />
-        <source-file src="src/ios/CordovaEventEmitter.m" />
+        <header-file src="src/ios/CordovaSpotifyEventEmitter.h" />
+        <source-file src="src/ios/CordovaSpotifyEventEmitter.m" />
         <header-file src="src/ios/AudioStreamingDelegate.h" />
         <source-file src="src/ios/AudioStreamingDelegate.m" />
         <header-file src="src/ios/AudioStreamingPlaybackDelegate.h" />

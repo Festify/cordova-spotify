@@ -2,9 +2,9 @@
 #define AudioStreamingPlaybackDelegate_h
 
 #import <SpotifyAudioPlayback/SPTAudioStreamingController.h>
-#import "CordovaEventEmitter.h"
+#import "CordovaSpotifyEventEmitter.h"
 
-@interface AudioStreamingPlaybackDelegate : CordovaEventEmitter <SPTAudioStreamingPlaybackDelegate>
+@interface AudioStreamingPlaybackDelegate : CordovaSpotifyEventEmitter <SPTAudioStreamingPlaybackDelegate>
 @end
 
 #endif

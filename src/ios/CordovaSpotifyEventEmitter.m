@@ -1,4 +1,6 @@
-#import "CordovaEventEmitter.h"
+#ifndef CordovaSpotifyEventEmitter_m
+#define CordovaSpotifyEventEmitter_m
+#import "CordovaSpotifyEventEmitter.h"
 
 NSString* getErrorFromMatrix(NSDictionary *matrix, NSNumber *code) {
     NSString *errorString = [matrix objectForKey: code];
@@ -9,7 +11,7 @@ NSString* getErrorFromMatrix(NSDictionary *matrix, NSNumber *code) {
     return errorString;
 }
 
-@implementation CordovaEventEmitter
+@implementation CordovaSpotifyEventEmitter
 
 + (instancetype)eventEmitterWithCommandDelegate:(id <CDVCommandDelegate>)commandDelegate {
     return [[self alloc] initWithCommandDelegate: commandDelegate];
@@ -44,3 +46,5 @@ NSString* getErrorFromMatrix(NSDictionary *matrix, NSNumber *code) {
 }
 
 @end
+
+#endif

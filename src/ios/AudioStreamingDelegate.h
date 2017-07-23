@@ -3,9 +3,9 @@
 
 #import <SpotifyAudioPlayback/SPTAudioStreamingController.h>
 #import <SpotifyAudioPlayback/SPTAudioStreamingController_ErrorCodes.h>
-#import "CordovaEventEmitter.h"
+#import "CordovaSpotifyEventEmitter.h"
 
-@interface AudioStreamingDelegate : CordovaEventEmitter <SPTAudioStreamingDelegate>
+@interface AudioStreamingDelegate : CordovaSpotifyEventEmitter <SPTAudioStreamingDelegate>
 @end
 
 #endif
