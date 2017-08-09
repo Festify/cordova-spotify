@@ -38,9 +38,9 @@
             [self sendResultForCommand: command withError: activationError andSuccess: nil];
         } else {
             [self sendResultForCommand: command
-                              withError:[NSError errorWithDomain:@"AudioSession" code:-1 userInfo:@{
-                                      NSLocalizedDescriptionKey: @"Audio session could not be activated"
-                              }]
+                             withError: [NSError errorWithDomain:@"AudioSession" code:-1 userInfo:@{
+                                 NSLocalizedDescriptionKey: @"Audio session could not be activated"
+                             }]
                              andSuccess: nil];
         }
         return;
