@@ -4,7 +4,7 @@ import Emitter from 'eventemitter3';
 let emitter;
 let emitterRegistered = false;
 
-export function play(trackUri, {token, clientId, position}) {
+export function play(trackUri, {token, clientId}, position) {
     return exec('play', [trackUri, token, clientId, position || 0]);
 }
 

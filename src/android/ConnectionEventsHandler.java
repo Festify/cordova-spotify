@@ -1,5 +1,7 @@
 package rocks.festify;
 
+import java.util.ArrayList;
+
 import android.util.Log;
 
 import com.spotify.sdk.android.player.ConnectionStateCallback;
@@ -11,6 +13,8 @@ class ConnectionEventsHandler extends Emitter
         implements ConnectionStateCallback {
     private static final String TAG = "ConnectionEventsHandler";
 
+    private ArrayList<Runnable> loginCallbacks = new ArrayList<Runnable>();
+
     @Override
     public void onConnectionMessage(String message) {
         this.emit("connectionmessage", message);
@@ -18,7 +22,18 @@ class ConnectionEventsHandler extends Emitter
 
     @Override
     public void onLoggedIn() {
+        for (Runnable item : this.loginCallbacks) {
+            if (item != null) {
+                item.run();
+            }
+        }
+        this.loginCallbacks.clear();
+
         this.emit("loggedin");
+    }
+
+    public void onLoggedIn(Runnable runnable) {
+        this.loginCallbacks.add(runnable);
     }
 
     @Override
