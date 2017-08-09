@@ -61,7 +61,7 @@
 
     NSString* trackUri = [command.arguments objectAtIndex: 0];
     NSString* accessToken = [command.arguments objectAtIndex: 1];
-    NSInteger from = [[command.arguments objectAtIndex: 2] intValue];
+    NSInteger from = [[command.arguments objectAtIndex: 3] intValue];
 
     if(!self.player.loggedIn || ![accessToken isEqualToString: self.currentToken]) {
         [self.audioStreamingDelegate handleLoginWithCallback: ^(void) {
