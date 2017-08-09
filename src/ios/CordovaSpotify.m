@@ -7,7 +7,7 @@
     [SPTAuth defaultInstance].sessionUserDefaultsKey = @"CordovaSpotifySession";
 
     // Tell iOS to play audio even in background and when the ringer is silent
-    [[AVAudioSession sharedInstance] setCategory:AVAudioSessionCategoryPlayback error:nil];
+    [[AVAudioSession sharedInstance] setCategory: AVAudioSessionCategoryPlayback error: nil];
 
     // Initialize delegates for event handling
     __weak id <CDVCommandDelegate> _commandDelegate = self.commandDelegate;
@@ -35,19 +35,19 @@
     BOOL success = [[AVAudioSession sharedInstance] setActive: YES error: &activationError];
     if (!success) {
         if (activationError) {
-            [self sendResultForCommand:command withError:activationError andSuccess:nil];
+            [self sendResultForCommand: command withError: activationError andSuccess: nil];
         } else {
-            [self sendResultForCommand:command
+            [self sendResultForCommand: command
                               withError:[NSError errorWithDomain:@"AudioSession" code:-1 userInfo:@{
                                       NSLocalizedDescriptionKey: @"Audio session could not be activated"
                               }]
-                             andSuccess:nil];
+                             andSuccess: nil];
         }
         return;
     }
 
     SPTErrorableOperationCallback cb = ^(NSError* err) {
-        [self sendResultForCommand:command withError:err andSuccess:nil];
+        [self sendResultForCommand: command withError: err andSuccess: nil];
     };
 
     [self.player playSpotifyURI: trackUri startingWithIndex: 0 startingWithPosition: 0 callback: cb];
@@ -56,16 +56,16 @@
 - (void) play:(CDVInvokedUrlCommand*)command {
     __weak CordovaSpotify* _self = self;
 
-    NSString* trackUri = [command.arguments objectAtIndex:0];
-    NSString* accessToken = [command.arguments objectAtIndex:1];
+    NSString* trackUri = [command.arguments objectAtIndex: 0];
+    NSString* accessToken = [command.arguments objectAtIndex: 1];
 
-    if(!self.player.loggedIn || ![accessToken isEqualToString:self.currentToken]) {
+    if(!self.player.loggedIn || ![accessToken isEqualToString: self.currentToken]) {
         [self.audioStreamingDelegate handleLoginWithCallback: ^(void) {
-            [_self playTrack:trackUri withCommand:command];
+            [_self playTrack: trackUri withCommand: command];
         }];
-        [self.player loginWithAccessToken:accessToken];
+        [self.player loginWithAccessToken: accessToken];
     }else{
-        [self playTrack:trackUri withCommand:command];
+        [self playTrack: trackUri withCommand: command];
     }
 }
 
@@ -73,7 +73,7 @@
     __weak CordovaSpotify* _self = self;
 
     [self.player setIsPlaying: NO callback: ^(NSError* err) {
-        [_self sendResultForCommand:command withError:err andSuccess:nil];
+        [_self sendResultForCommand: command withError: err andSuccess: nil];
     }];
 }
 
@@ -81,18 +81,18 @@
     __weak CordovaSpotify* _self = self;
 
     [self.player setIsPlaying: YES callback: ^(NSError* err) {
-        [_self sendResultForCommand:command withError:err andSuccess:nil];
+        [_self sendResultForCommand: command withError: err andSuccess: nil];
     }];
 }
 
 - (void) registerEventsListener:(CDVInvokedUrlCommand*)command {
-    [self.audioStreamingDelegate setCallbackId:command.callbackId];
-    [self.audioStreamingPlaybackDelegate setCallbackId:command.callbackId];
+    [self.audioStreamingDelegate setCallbackId: command.callbackId];
+    [self.audioStreamingPlaybackDelegate setCallbackId: command.callbackId];
 
     CDVPluginResult *result = [CDVPluginResult
             resultWithStatus: CDVCommandStatus_OK
              messageAsString: nil];
-    [result setKeepCallbackAsBool:YES];
+    [result setKeepCallbackAsBool: YES];
 
     [self.commandDelegate sendPluginResult: result callbackId: command.callbackId];
 }
