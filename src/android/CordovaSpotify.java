@@ -106,8 +106,8 @@ public class CordovaSpotify extends CordovaPlugin {
         SpotifyPlayer player = this.player;
 
         if (player == null || 
-            currentAccessToken != accessToken || 
-            currentClientId != clientId) {
+            !accessToken.equals(currentAccessToken) || 
+            !clientId.equals(currentClientId)) {
             Config playerConfig = new Config(
                 this.cordova.getActivity().getApplicationContext(),
                 accessToken,
