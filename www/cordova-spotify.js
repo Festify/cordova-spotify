@@ -4,8 +4,8 @@ import Emitter from 'eventemitter3';
 let emitter;
 let emitterRegistered = false;
 
-export function play(trackUri, {token, clientId}) {
-    return exec('play', [trackUri, token, clientId]);
+export function play(trackUri, {token, clientId, position}) {
+    return exec('play', [trackUri, token, clientId, position || 0]);
 }
 
 export function getPosition() {
@@ -20,8 +20,12 @@ export function resume() {
     return exec('resume');
 }
 
+export function seekTo(positionMs) {
+    return exec('seekTo', [positionMs]);
+}
+
 export function getEventEmitter() {
-    if(emitter) {
+    if (emitter) {
         return Promise.resolve(emitter);
     }
 

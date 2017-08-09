@@ -18,7 +18,7 @@
 
     - (void) pluginInitialize;
 
-    - (void) playTrack:(NSString*)trackUri withCommand:(CDVInvokedUrlCommand*)command;
+    - (void) playTrack:(NSString*)trackUri fromPos:(NSInteger)positionMs withCommand:(CDVInvokedUrlCommand*)command;
     - (void) play:(CDVInvokedUrlCommand*)command;
     - (void) pause:(CDVInvokedUrlCommand*)command;
     - (void) resume:(CDVInvokedUrlCommand*)command;

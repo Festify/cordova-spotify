@@ -29,7 +29,7 @@
     [self.commandDelegate sendPluginResult: result callbackId: command.callbackId];
 }
 
-- (void) playTrack:(NSString*)trackUri withCommand:(CDVInvokedUrlCommand*)command {
+- (void) playTrack:(NSString*)trackUri fromPos:(NSInteger)positionMs withCommand:(CDVInvokedUrlCommand*)command {
     // Take over audio session
     NSError *activationError = nil;
     BOOL success = [[AVAudioSession sharedInstance] setActive: YES error: &activationError];
@@ -50,7 +50,10 @@
         [self sendResultForCommand: command withError: err andSuccess: nil];
     };
 
-    [self.player playSpotifyURI: trackUri startingWithIndex: 0 startingWithPosition: 0 callback: cb];
+    [self.player playSpotifyURI: trackUri 
+              startingWithIndex: 0 
+           startingWithPosition: positionMs / 1000.0 
+                       callback: cb];
 }
 
 - (void) play:(CDVInvokedUrlCommand*)command {
@@ -58,14 +61,15 @@
 
     NSString* trackUri = [command.arguments objectAtIndex: 0];
     NSString* accessToken = [command.arguments objectAtIndex: 1];
+    NSInteger from = [[command.arguments objectAtIndex: 2] intValue];
 
     if(!self.player.loggedIn || ![accessToken isEqualToString: self.currentToken]) {
         [self.audioStreamingDelegate handleLoginWithCallback: ^(void) {
-            [_self playTrack: trackUri withCommand: command];
+            [_self playTrack: trackUri fromPos: from withCommand: command];
         }];
         [self.player loginWithAccessToken: accessToken];
     }else{
-        [self playTrack: trackUri withCommand: command];
+        [self playTrack: trackUri fromPos: from withCommand: command];
     }
 }
 
@@ -95,6 +99,15 @@
     [result setKeepCallbackAsBool: YES];
 
     [self.commandDelegate sendPluginResult: result callbackId: command.callbackId];
+}
+
+- (void) seekTo:(CDVInvokedUrlCommand*)cmd {
+    __weak CordovaSpotify* _self = self;
+    NSInteger position = [[cmd.arguments objectAtIndex: 0] intValue];
+
+    [self.player seekTo: position / 1000.0 callback: ^(NSError *err) {
+        [_self sendResultForCommand: cmd withError: err andSuccess: nil];
+    }];
 }
 
 - (void) sendResultForCommand:(CDVInvokedUrlCommand*)cmd withError:(NSError*) err andSuccess:(NSString*) success {
