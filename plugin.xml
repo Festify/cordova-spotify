@@ -38,9 +38,6 @@
         <resource-file
             src="src/android/spotify-sdk/spotify-player-24-noconnect-2.20b.aar"
             target="libs/spotify-sdk.aar" />
-        <resource-file
-            src="src/android/spotify-auth/auth-lib/build/outputs/aar/spotify-android-auth-1.0.0.aar"
-            target="libs/spotify-auth.aar" />
     </platform>
 
     <platform name="ios">
