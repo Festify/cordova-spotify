@@ -3,5 +3,10 @@
 echo "✨ Starting JS build"
 cd "$(dirname $0)/www"
 
-npm install
+if hash yarn 2>/dev/null; then
+    yarn
+else
+    npm install
+fi
+
 ./node_modules/.bin/webpack
