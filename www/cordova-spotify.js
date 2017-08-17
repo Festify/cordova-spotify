@@ -1,4 +1,4 @@
-import exec from './lib/execPromise.js';
+import exec from './lib/exec-promise.js';
 import Emitter from 'eventemitter3';
 
 let emitter;

@@ -14,5 +14,10 @@ export default function(methodName, args) {
         'SpotifyConnector',
         methodName,
         args || []
-    ));
+    ))
+        .catch(({ type, msg }) => {
+            const e = new Error(msg);
+            e.name = type;
+            return Promise.reject(e);
+        });
 }

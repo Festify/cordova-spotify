@@ -12,15 +12,13 @@ import org.json.JSONObject;
 
 import java.util.HashMap;
 import java.util.Date;
+import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 import java.text.SimpleDateFormat;
 
 import android.app.Activity;
 import android.content.Intent;
 
-import com.spotify.sdk.android.authentication.AuthenticationClient;
-import com.spotify.sdk.android.authentication.AuthenticationRequest;
-import com.spotify.sdk.android.authentication.AuthenticationResponse;
 import com.spotify.sdk.android.player.Config;
 import com.spotify.sdk.android.player.ConnectionStateCallback;
 import com.spotify.sdk.android.player.Error;
@@ -34,7 +32,7 @@ import rocks.festify.PlayerEventsHandler;
 
 public class CordovaSpotify extends CordovaPlugin {
     private static final int LOGIN_REQUEST_CODE = 8139;
-    private static final String TAG = "CordovaSpotify";
+    private static final String TAG = "CDVSpotify";
 
     private String currentAccessToken = null;
     private String currentClientId = null;
@@ -85,7 +83,11 @@ public class CordovaSpotify extends CordovaPlugin {
             PlaybackState state = player.getPlaybackState();
 
             if (state == null) {
-                callbackContext.error("Received null from SpotifyPlayer.getPlaybackState()!");
+                JSONObject descr = this.makeError(
+                    "unknown", 
+                    "Received null from SpotifyPlayer.getPlaybackState()!"
+                );
+                callbackContext.error(descr);
                 return;
             }
 
@@ -105,45 +107,141 @@ public class CordovaSpotify extends CordovaPlugin {
             final int fromPosition) {
         SpotifyPlayer player = this.player;
 
-        if (player == null || 
-            !accessToken.equals(currentAccessToken) || 
-            !clientId.equals(currentClientId)) {
-            Config playerConfig = new Config(
-                this.cordova.getActivity().getApplicationContext(),
-                accessToken,
-                clientId
+        if (player == null) {
+            Log.d(TAG, "Player is null, initing.");
+            this.initAndPlay(
+                callbackContext, 
+                trackUri, 
+                accessToken, 
+                clientId, 
+                fromPosition
             );
-
-            Spotify.getPlayer(playerConfig, this.cordova.getActivity(), new SpotifyPlayer.InitializationObserver() {
+            return;
+        } else if (!Objects.equals(accessToken, currentAccessToken)) {
+            Log.d(TAG, "Access token changed, reiniting.");
+            this.logout(new Runnable() {
                 @Override
-                public void onInitialized(SpotifyPlayer spotifyPlayer) {
-                    CordovaSpotify.this.currentAccessToken = accessToken;
-                    CordovaSpotify.this.currentClientId = clientId;
-                    CordovaSpotify.this.player = spotifyPlayer;
-
-                    spotifyPlayer.addConnectionStateCallback(CordovaSpotify.this.connectionEventsHandler);
-                    spotifyPlayer.addNotificationCallback(CordovaSpotify.this.playerEventsHandler);
-
-                    CordovaSpotify.this.connectionEventsHandler.onLoggedIn(new Runnable() {
-                        @Override
-                        public void run() {
-                            CordovaSpotify.this.play(
-                                callbackContext, 
-                                trackUri, 
-                                accessToken, 
-                                clientId, 
-                                fromPosition
-                            );
-                        }
-                    });
-                }
-
-                @Override
-                public void onError(Throwable throwable) {
-                    callbackContext.error("Could not initialize player: " + throwable.toString());
+                public void run() {
+                    CordovaSpotify.this.loginAndPlay(
+                        callbackContext,
+                        trackUri,
+                        accessToken,
+                        fromPosition
+                    );
                 }
             });
+            return;
+        } else if (!Objects.equals(clientId, currentClientId)) {
+            JSONObject descr = this.makeError(
+                "not_implemented", 
+                "Changing the client ID is not yet supported"
+            );
+            callbackContext.error(descr);
+            return;
+        }
 
+        this.doPlay(callbackContext, trackUri, fromPosition);
+    }
+
+    private void initAndPlay(
+            final CallbackContext callbackContext,
+            final String trackUri, 
+            final String accessToken, 
+            final String clientId, 
+            final int fromPosition) {
+        Config playerConfig = new Config(
+            this.cordova.getActivity().getApplicationContext(),
+            null,
+            clientId
+        );
+
+        Log.d(TAG, "Initializing player");
+        Spotify.getPlayer(playerConfig, this.cordova.getActivity(), new SpotifyPlayer.InitializationObserver() {
+            @Override
+            public void onInitialized(SpotifyPlayer spotifyPlayer) {
+                Log.d(TAG, "Player Initialized, logging in");
+
+                CordovaSpotify.this.currentClientId = clientId;
+                CordovaSpotify.this.player = spotifyPlayer;
+                
+                CordovaSpotify.this.loginAndPlay(callbackContext, trackUri, accessToken, fromPosition);
+            }
+
+            @Override
+            public void onError(Throwable throwable) {
+                Log.d(TAG, "Init failure");
+
+                JSONObject descr = CordovaSpotify.this.makeError(
+                    "player_init_failed", 
+                    throwable.getMessage()
+                );
+                callbackContext.error(descr);
+            }
+        });
+    }
+
+    private void loginAndPlay(
+            final CallbackContext callbackContext,
+            final String trackUri, 
+            final String accessToken, 
+            final int fromPosition) {
+        final SpotifyPlayer player = this.player;
+        if (player == null) {
+            Log.wtf(TAG, "SpotifyPlayer instance was null in loginAndPlay.");
+
+            JSONObject descr = this.makeError(
+                "unknown",
+                "Received null as SpotifyPlayer in login method."
+            );
+            callbackContext.error(descr);
+            return;
+        }
+
+        player.addConnectionStateCallback(this.connectionEventsHandler);
+        player.addNotificationCallback(this.playerEventsHandler);
+
+        this.connectionEventsHandler.onLoggedIn(new Player.OperationCallback() {
+            @Override
+            public void onSuccess() {
+                Log.d(TAG, "Login success.");
+
+                CordovaSpotify.this.currentAccessToken = accessToken;
+
+                CordovaSpotify.this.doPlay(
+                    callbackContext, 
+                    trackUri, 
+                    fromPosition
+                );
+            }
+
+            @Override
+            public void onError(Error error) {
+                Log.d(TAG, "Login failure");
+
+                JSONObject descr = CordovaSpotify.this.makeError(
+                    "login_failed", 
+                    error.toString()
+                );
+                callbackContext.error(descr);
+            }
+        });
+
+        player.login(accessToken);
+    }
+
+    private void doPlay(
+            final CallbackContext callbackContext, 
+            final String trackUri, 
+            final int fromPosition) {
+        final SpotifyPlayer player = this.player;
+        if (player == null) {
+            Log.wtf(TAG, "SpotifyPlayer instance was null in doPlay.");
+
+            JSONObject descr = this.makeError(
+                "unknown",
+                "Received null as SpotifyPlayer in play method."
+            );
+            callbackContext.error(descr);
             return;
         }
 
@@ -155,9 +253,36 @@ public class CordovaSpotify extends CordovaPlugin {
 
             @Override
             public void onError(Error error) {
-                callbackContext.error("Playing of track failed: " + error.toString());
+                JSONObject descr = CordovaSpotify.this.makeError(
+                    "playback_failed", 
+                    error.toString()
+                );
+                callbackContext.error(descr);
             }
         }, trackUri, 0, fromPosition);
+    }
+
+    private void logout(final Runnable callback) {
+        final SpotifyPlayer player = this.player;
+        if (player == null) {
+            callback.run();
+            return;
+        }
+
+        Log.d(TAG, "Logging out");
+        this.connectionEventsHandler.onLoggedOut(new Runnable() {
+            @Override
+            public void run() {
+                Log.d(TAG, "Logout successful");
+
+                player.removeConnectionStateCallback(CordovaSpotify.this.connectionEventsHandler);
+                player.removeNotificationCallback(CordovaSpotify.this.playerEventsHandler);
+
+                callback.run();
+            }
+        });
+
+        player.logout();
     }
 
     private void pause(final CallbackContext callbackContext) {
@@ -181,7 +306,11 @@ public class CordovaSpotify extends CordovaPlugin {
 
             @Override
             public void onError(Error error) {
-                callbackContext.error("Pausing failed: " + error.toString());
+                JSONObject descr = CordovaSpotify.this.makeError(
+                    "pause_failed", 
+                    error.toString()
+                );
+                callbackContext.error(descr);
             }
         });
     }
@@ -211,7 +340,11 @@ public class CordovaSpotify extends CordovaPlugin {
 
             @Override
             public void onError(Error error) {
-                callbackContext.error("Resume failed: " + error.toString());
+                JSONObject descr = CordovaSpotify.this.makeError(
+                    "resume_failed", 
+                    error.toString()
+                );
+                callbackContext.error(descr);
             }
         });
     }
@@ -231,7 +364,11 @@ public class CordovaSpotify extends CordovaPlugin {
 
             @Override
             public void onError(Error error) {
-                callbackContext.error("Seek failed: " + error.toString());
+                JSONObject descr = CordovaSpotify.this.makeError(
+                    "seek_failed", 
+                    error.toString()
+                );
+                callbackContext.error(descr);
             }
         }, pos);
     }
@@ -250,6 +387,22 @@ public class CordovaSpotify extends CordovaPlugin {
             } catch (InterruptedException e) {
                 Log.wtf(TAG, "Interrupted while destroying Spotify player.", e);
             }
+        }
+    }
+
+    /*
+     * PRIVATES
+     */
+
+    private JSONObject makeError(String type, String msg) {
+        try {
+            final JSONObject obj = new JSONObject();
+            obj.put("type", type);
+            obj.put("msg", msg);
+            return obj;
+        } catch (JSONException e) {
+            Log.wtf(TAG, "Got a JSONException during error creation.", e);
+            return null;
         }
     }
 }
