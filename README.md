@@ -2,11 +2,13 @@
 
 [![Greenkeeper badge](https://badges.greenkeeper.io/Festify/cordova-spotify.svg)](https://greenkeeper.io/)
 
-An [Apache Cordova](https://cordova.apache.org/) plugin providing a thin wrapper over the Spotify SDK for iOS and Android.
+An [Apache Cordova](https://cordova.apache.org/) plugin providing access to the Spotify SDK for iOS and Android.
+
+[API documentation](#api-docs)
 
 ## Features
 
-This plugin provides a very thin layer over the authentication and playback functionality of the Spotify SDK. It allows your users to authenticate using OAuth 2.0 and allows you to play Spotify tracks via their URI. Metadata functionality has deliberately been left out in favor of the [Web API](https://developer.spotify.com/web-api/). After your users have been authenticated, you are given the access token, so accessing the Web API is trivial.
+This plugin provides a very simple and atomic layer over playback functionality of the Spotify SDK. It allows you to play Spotify tracks via their URI. Metadata and authentication functionality has deliberately been left out in favor of the [Web API](https://developer.spotify.com/web-api/) and other authentication solutions.
 
 ## Stability
 
@@ -22,30 +24,63 @@ Pull requests are very welcome! Please use the [gitmoji](https://gitmoji.carlosc
 cordova plugin add cordova-spotify
 ```
 
-API documentation will be provided at a later stage when the stability has improved.
-
 Note: Make sure your installation path doesn't contain any spaces.
 
-## Token Exchange Service
+## <a name="api-docs"></a>API Documentation
 
-The Spotify SDK needs some server code for the OAuth authentication because this plugin uses the authorization code flow only. This is because you probably don't want your users to have to login repeatedly every hour. Take a look at the Spotify [documentation](https://developer.spotify.com/web-api/authorization-guide/#authorization-code-flow) for more information.
+### General 
 
-To easily implement the endpoints for the token swap and token refresh service, we built a [Serverless](https://serverless.com) service for [AWS Lambda](https://aws.amazon.com/lambda/). Make sure you [install the Serverless Framework properly](https://serverless.com/framework/docs/providers/aws/guide/installation/)!
+The plugin has an extremely simple API that is focused just on playback. It consists of six functions clobbered onto `cordova.plugins.spotify`. In the following, treat all paths relative to that. The plugin handles all internal state and SDK initialization aspects automatically and hides these aspects from the developer.
 
-For the execution of the functions to work you need to set some environmental configuration in the file `oauth-token-api/.env`
+All functions are asynchronous and return promises. The plugin automatically polyfills promise support through `es6-promise-plugin`.
 
-```bash
-CLIENT_ID="<Your Spotify Client ID>"
-CLIENT_SECRET="<Your Spotify Client Secret>"
-CLIENT_CALLBACK_URL="<The callback url of your app>" # e.g. "festify-spotify://callback"
-ENCRYPTION_SECRET="<Secret used to encrypt the refresh token - please generate>"
-```
+If the parameters have invalid values, an appropriate `Error` will be thrown immediately instead of returning a rejected promise. This is because invalid arguments are bugs and not runtime errors.
 
-You can then deploy the functions like this:
+### `getEventEmitter()`
 
-```bash
-cd oauth-token-api
-serverless deploy
-```
+Obtains an event emitter that relays the events fired by the native SDKs. The emitter will be created once and then returned on subsequent invocations.
 
-Also, you need to register the client callback protocol inside the App Info.plist so that iOS knows which app to start when it is redirected when the authentication is done. Take a look at [this repository](https://github.com/Festify/festify-cordova-scheme-helper) to see how it's done.
+The events emitted are the following:
+- `connectionmessage`
+- `loggedin`
+- `loggedout`
+- `loginfailed`
+- `playbackerror`
+- `playbackevent`
+- `temporaryerror`
+
+In the case of `loginfailed`, `playbackevent` and `playbackerror`, the event contains a payload that describes what happened exactly. The payload is simply the name of the discriminant of the enum in the native SDK without the prefix (usually `kSp` or `kSpError`). See the offical documentation [here](https://spotify.github.io/android-sdk/player/com/spotify/sdk/android/player/Error.html) and [here](https://spotify.github.io/android-sdk/player/com/spotify/sdk/android/player/PlayerEvent.html) for all variants.
+
+### `getPosition()`
+
+Obtains the players position in _milliseconds_. If no track is currently loaded, returns 0.
+
+### `play(trackUri: string, authOptions: object[, position: number])`
+
+Plays the track with the given Spotify URI.
+
+#### Parameters
+
+- `trackUri`: The Spotify URI of the track to play. E.g. `spotify:track:6nTiIhLmQ3FWhvrGafw2z`. May not be null.
+- `authOptions`: An object containing two keys:
+    - `token: string`: A valid Spotify access token with the `streaming` scope. May not be null.
+    - `clientId: string`: Your application's client ID as obtained from https://developer.spotify.com. May not be null.
+- `position`: Optional. The position (in _milliseconds_) to start playing the track from. Must be >= 0.
+
+`token` and `clientId` may change freely during runtime. The plugin will handle the required login / logout processes automatically when a new track is played.
+
+### `pause()`
+
+Pauses playback. If no track is loaded, returns normally.
+
+### `resume()`
+
+Resumes playback. If no track is loaded, the returned promise will be rejected with an error of type `not_playing`.
+
+### `seekTo(position: number)`
+
+Sets the playback position to the given value. If no track is loaded, the returned promise will be rejected with an error of type `not_playing`.
+
+#### Parameters
+
+- `position`: The position (in _milliseconds_) to seek to. Must be > 0.

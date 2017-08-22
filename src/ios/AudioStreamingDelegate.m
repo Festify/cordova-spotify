@@ -2,7 +2,7 @@
 
 @implementation AudioStreamingDelegate
 
-- (instancetype)initWithCommandDelegate:(id <CDVCommandDelegate>)commandDelegate {
+- (instancetype)initWithCommandDelegate: (id <CDVCommandDelegate>) commandDelegate {
     self = [super initWithCommandDelegate: commandDelegate];
 
     if(self) {
@@ -35,7 +35,21 @@
 }
 
 - (void)audioStreamingDidLogout:(SPTAudioStreamingController *)audioStreaming {
+    if (self.logoutCallback) {
+        self.logoutCallback();
+        self.logoutCallback = nil;
+    }
+
     [self emit:@"loggedout" withData:@[]];
+}
+
+- (void)audioStreamingDidLogin:(SPTAudioStreamingController *)audioStreaming {
+    if (self.loginCallback) {
+        self.loginCallback(nil);
+        self.loginCallback = nil;
+    }
+
+    [self emit:@"loggedin" withData:@[]];
 }
 
 - (void)audioStreaming:(SPTAudioStreamingController *)audioStreaming didReceiveMessage:(NSString *)message {
@@ -43,7 +57,22 @@
 }
 
 - (void)audioStreaming:(SPTAudioStreamingController *)audioStreaming didReceiveError:(NSError *)error {
+    if (self.loginCallback) {
+        self.loginCallback(error);
+        self.loginCallback = nil;
+
+        return;
+    }
+
     [self emit:@"playbackerror" withData:@[getErrorFromMatrix(self.codeMatrix, [NSNumber numberWithInteger: [error code]])]];
+}
+
+- (void) handleLoginWithCallback:(void (^)(NSError* err))callback {
+    self.loginCallback = callback;
+}
+
+- (void) handleLogoutWithCallback:(void (^)(void))callback {
+    self.logoutCallback = callback;
 }
 
 @end

@@ -1,11 +1,11 @@
-#ifndef CordovaEventEmitter_h
-#define CordovaEventEmitter_h
+#ifndef CordovaSpotifyEventEmitter_h
+#define CordovaSpotifyEventEmitter_h
 
 #import <Cordova/CDVPlugin.h>
 
 NSString* getErrorFromMatrix(NSDictionary *matrix, NSNumber *code);
 
-@interface CordovaEventEmitter : NSObject
+@interface CordovaSpotifyEventEmitter : NSObject
     @property (nonatomic, weak) id <CDVCommandDelegate> commandDelegate;
     @property (nonatomic) NSString *eventCallbackId;
     @property (nonatomic) NSDictionary *codeMatrix;

@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='utf-8'?>
-<plugin id="cordova-spotify" version="0.4.1" xmlns="http://apache.org/cordova/ns/plugins/1.0" xmlns:android="http://schemas.android.com/apk/res/android">
+<plugin id="cordova-spotify" version="0.5.0" xmlns="http://apache.org/cordova/ns/plugins/1.0" xmlns:android="http://schemas.android.com/apk/res/android">
     <name>cordova-spotify</name>
 
     <hook type="before_plugin_install" src="package.sh" />
@@ -38,9 +38,6 @@
         <resource-file
             src="src/android/spotify-sdk/spotify-player-24-noconnect-2.20b.aar"
             target="libs/spotify-sdk.aar" />
-        <resource-file
-            src="src/android/spotify-auth/auth-lib/build/outputs/aar/spotify-android-auth-1.0.0.aar"
-            target="libs/spotify-auth.aar" />
     </platform>
 
     <platform name="ios">
@@ -60,8 +57,8 @@
 
         <header-file src="src/ios/CordovaSpotify.h" />
         <source-file src="src/ios/CordovaSpotify.m" />
-        <header-file src="src/ios/CordovaEventEmitter.h" />
-        <source-file src="src/ios/CordovaEventEmitter.m" />
+        <header-file src="src/ios/CordovaSpotifyEventEmitter.h" />
+        <source-file src="src/ios/CordovaSpotifyEventEmitter.m" />
         <header-file src="src/ios/AudioStreamingDelegate.h" />
         <source-file src="src/ios/AudioStreamingDelegate.m" />
         <header-file src="src/ios/AudioStreamingPlaybackDelegate.h" />
