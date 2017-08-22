@@ -5,6 +5,19 @@ let emitter;
 let emitterRegistered = false;
 
 export function play(trackUri, {token, clientId}, position) {
+    if (!trackUri) {
+        throw new ReferenceError("trackUri parameter is null");
+    }
+    if (!token) {
+        throw new ReferenceError("token parameter is null");
+    }
+    if (!clientId) {
+        throw new ReferenceError("clientId parameter is null");
+    }
+    if (position < 0) {
+        throw new RangeError("position parameter is < 0");
+    }
+
     return exec('play', [trackUri, token, clientId, position || 0]);
 }
 
@@ -21,6 +34,10 @@ export function resume() {
 }
 
 export function seekTo(positionMs) {
+    if (positionMs < 0) {
+        throw new RangeError("positionMs parameter is < 0");
+    }
+
     return exec('seekTo', [positionMs]);
 }
 
