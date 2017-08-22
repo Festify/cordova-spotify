@@ -237,8 +237,8 @@
     SPTAudioStreamingController* player = self.player;
     if (!player) {
         [self sendResultForCommand: command
-                     withErrorType: nil
-                          andDescr: nil
+                     withErrorType: @"not_playing"
+                          andDescr: @"The Spotify SDK currently does not play music. Play a track to resume it."
                         andSuccess: nil];
         return;
     }
@@ -275,8 +275,8 @@
     SPTAudioStreamingController* player = self.player;
     if (!player || ![[player playbackState] isPlaying]) {
         [self sendResultForCommand: command
-                     withErrorType: nil
-                          andDescr: nil
+                     withErrorType: @"not_playing"
+                          andDescr: @"The Spotify SDK currently does not play music. Play a track to seek."
                         andSuccess: nil];
         return;
     }

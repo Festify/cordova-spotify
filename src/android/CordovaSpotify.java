@@ -190,7 +190,11 @@ public class CordovaSpotify extends CordovaPlugin {
     private void resume(final CallbackContext callbackContext) {
         SpotifyPlayer player = this.player;
         if (player == null) {
-            callbackContext.success();
+            JSONObject descr = CordovaSpotify.this.makeError(
+                "not_playing",
+                "The Spotify SDK currently does not play music. Play a track to resume it."
+            );
+            callbackContext.error(descr);
             return;
         }
 
@@ -217,7 +221,11 @@ public class CordovaSpotify extends CordovaPlugin {
     private void seekTo(final CallbackContext callbackContext, int pos) {
         SpotifyPlayer player = this.player;
         if (player == null) {
-            callbackContext.success();
+            JSONObject descr = CordovaSpotify.this.makeError(
+                "not_playing",
+                "The Spotify SDK currently does not play music. Play a track to seek."
+            );
+            callbackContext.error(descr);
             return;
         }
 
