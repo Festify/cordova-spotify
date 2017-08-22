@@ -23,6 +23,8 @@
     __weak CordovaSpotify* _self = self;
     [self.audioStreamingDelegate handleLoginWithCallback: ^(NSError* err) {
         if (err) {
+            _self.currentToken = nil;
+
             [_self sendResultForCommand: command
                           withErrorType: @"login_failed"
                                andDescr: err.localizedDescription
@@ -49,6 +51,11 @@
         startWithClientId: clientId 
                     error: &startError];
     if (!success) {
+        self.currentClientId = nil;
+        self.player.delegate = nil;
+        self.player.playbackDelegate = nil;
+        self.player = nil;
+
         if (startError) {
             [self sendResultForCommand: command
                          withErrorType: @"player_init_failed"

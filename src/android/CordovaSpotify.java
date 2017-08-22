@@ -307,6 +307,7 @@ public class CordovaSpotify extends CordovaPlugin {
             public void onError(Throwable throwable) {
                 Log.e(TAG, "Player init failure.", throwable);
 
+                CordovaSpotify.this.currentClientId = null;
                 JSONObject descr = CordovaSpotify.this.makeError(
                     "player_init_failed", 
                     throwable.getMessage()
@@ -353,6 +354,7 @@ public class CordovaSpotify extends CordovaPlugin {
             public void onError(Error error) {
                 Log.e(TAG, "Login failure: " + error.toString());
 
+                CordovaSpotify.this.currentAccessToken = null;
                 JSONObject descr = CordovaSpotify.this.makeError(
                     "login_failed", 
                     error.toString()
