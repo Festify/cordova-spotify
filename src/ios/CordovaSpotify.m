@@ -124,8 +124,12 @@
 }
 
 - (void) logout:(void (^)(void))callback {
-    [self.audioStreamingDelegate handleLogoutWithCallback: callback];
-    [self.player logout];
+    if ([self.player loggedIn]) {
+        [self.audioStreamingDelegate handleLogoutWithCallback: callback];
+        [self.player logout];
+    } else {
+        callback();
+    }
 }
 
 - (void) sendResultForCommand:(CDVInvokedUrlCommand*)cmd 

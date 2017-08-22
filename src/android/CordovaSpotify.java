@@ -146,26 +146,6 @@ public class CordovaSpotify extends CordovaPlugin {
         }
     }
 
-    private void logout(final Runnable callback) {
-        final SpotifyPlayer player = this.player;
-        if (player == null) {
-            callback.run();
-            return;
-        }
-
-        this.connectionEventsHandler.onLoggedOut(new Runnable() {
-            @Override
-            public void run() {
-                player.removeConnectionStateCallback(CordovaSpotify.this.connectionEventsHandler);
-                player.removeNotificationCallback(CordovaSpotify.this.playerEventsHandler);
-
-                callback.run();
-            }
-        });
-
-        player.logout();
-    }
-
     private void pause(final CallbackContext callbackContext) {
         SpotifyPlayer player = this.player;
         if (player == null) {
@@ -280,6 +260,31 @@ public class CordovaSpotify extends CordovaPlugin {
     /*
      * PRIVATES
      */
+
+    private void logout(final Runnable callback) {
+        final SpotifyPlayer player = this.player;
+        if (player == null) {
+            callback.run();
+            return;
+        }
+
+        Runnable cb = new Runnable() {
+            @Override
+            public void run() {
+                player.removeConnectionStateCallback(CordovaSpotify.this.connectionEventsHandler);
+                player.removeNotificationCallback(CordovaSpotify.this.playerEventsHandler);
+
+                callback.run();
+            }
+        };
+
+        if (player.isLoggedIn()) {
+            this.connectionEventsHandler.onLoggedOut(cb);
+            player.logout();
+        } else {
+            cb.run();
+        }
+    }
 
     private void initAndPlay(
         final CallbackContext callbackContext,
