@@ -83,4 +83,4 @@ Sets the playback position to the given value. If no track is loaded, the return
 
 #### Parameters
 
-- `position`: The position (in _milliseconds_) to seek to. Must be > 0.
+- `position`: The position (in _milliseconds_) to seek to. Must be >= 0.
