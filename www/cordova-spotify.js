@@ -56,6 +56,8 @@ export function getEventEmitter() {
         const reject = e => setTimeout(() => rej(e));
 
         cordova.exec(event => {
+            // First callback invocation confirms the emitter's registration
+            // with the native code. The subsequent ones are actual events.
             if (!emitterRegistered) {
                 emitterRegistered = true;
                 resolve(this);
