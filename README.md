@@ -36,7 +36,7 @@ All functions are asynchronous and return promises. The plugin automatically pol
 
 If the parameters have invalid values, an appropriate `Error` will be thrown immediately instead of returning a rejected promise. This is because invalid arguments are bugs and not runtime errors.
 
-### `getEventEmitter()`
+### `getEventEmitter(): Promise<EventEmitter>`
 
 Obtains an event emitter that relays the events fired by the native SDKs. The emitter will be created once and then returned on subsequent invocations.
 
@@ -51,11 +51,11 @@ The events emitted are the following:
 
 In the case of `loginfailed`, `playbackevent` and `playbackerror`, the event contains a payload that describes what happened exactly. The payload is simply the name of the discriminant of the enum in the native SDK without the prefix (usually `kSp` or `kSpError`). See the offical documentation [here](https://spotify.github.io/android-sdk/player/com/spotify/sdk/android/player/Error.html) and [here](https://spotify.github.io/android-sdk/player/com/spotify/sdk/android/player/PlayerEvent.html) for all variants.
 
-### `getPosition()`
+### `getPosition(): Promise<number>`
 
 Obtains the players position in _milliseconds_. If no track is currently loaded, returns 0.
 
-### `play(trackUri: string, authOptions: object[, position: number])`
+### `play(trackUri: string, authOptions: object[, position: number]): Promise`
 
 Plays the track with the given Spotify URI.
 
@@ -69,15 +69,15 @@ Plays the track with the given Spotify URI.
 
 `token` and `clientId` may change freely during runtime. The plugin will handle the required login / logout processes automatically when a new track is played.
 
-### `pause()`
+### `pause(): Promise`
 
 Pauses playback. If no track is loaded, returns normally.
 
-### `resume()`
+### `resume(): Promise`
 
 Resumes playback. If no track is loaded, the returned promise will be rejected with an error of type `not_playing`.
 
-### `seekTo(position: number)`
+### `seekTo(position: number): Promise`
 
 Sets the playback position to the given value. If no track is loaded, the returned promise will be rejected with an error of type `not_playing`.
 
