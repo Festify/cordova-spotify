@@ -32,9 +32,9 @@ Note: Make sure your installation path doesn't contain any spaces.
 
 The plugin has an extremely simple API that is focused just on playback. It consists of six functions clobbered onto `cordova.plugins.spotify`. In the following, treat all paths relative to that. The plugin handles all internal state and SDK initialization aspects automatically and hides these aspects from the developer.
 
-All functions are asynchronous and return promises. The plugin automatically polyfills promise support through `es6-promise-plugin`.
+All functions are asynchronous and return promises (due to the way the Cordova <-> native code bridge works). The plugin automatically polyfills promise support through `es6-promise-plugin`.
 
-If the parameters have invalid values, an appropriate `Error` will be thrown immediately instead of returning a rejected promise. This is because invalid arguments are bugs and not runtime errors.
+If any of the function parameters have invalid values, an appropriate `Error` will be thrown immediately instead of returning a rejected promise. This is because invalid arguments are bugs and not runtime errors.
 
 ### `getEventEmitter(): Promise<EventEmitter>`
 
