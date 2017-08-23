@@ -64,6 +64,12 @@ export function getEventEmitter() {
             } else {
                 setTimeout(() => emitter.emit(event.name, ...(event.args || [])));
             }
-        }, err => reject(err), 'SpotifyConnector', 'registerEventsListener', []);
+        }, err => {
+            // Make sure we can try again
+            if (!emitterRegistered) {
+                emitter = null;
+            }
+            reject(err);
+        }, 'SpotifyConnector', 'registerEventsListener', []);
     });
 }
