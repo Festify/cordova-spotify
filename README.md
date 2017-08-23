@@ -40,6 +40,8 @@ If any of the function parameters have invalid values, an appropriate `Error` wi
 
 Obtains an event emitter that relays the events fired by the native SDKs. The emitter will be created once and then returned on subsequent invocations.
 
+The emitter implementation comes from [eventemitter3](https://github.com/primus/eventemitter3). See their Github page for more information.
+
 The events emitted are the following:
 - `connectionmessage`
 - `loggedin`
