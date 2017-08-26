@@ -14,8 +14,8 @@ class ConnectionEventsHandler extends Emitter
         implements ConnectionStateCallback {
     private static final String TAG = "ConnectionEventsHandler";
 
-    private final ArrayList<Player.OperationCallback> loginCallbacks = new ArrayList<Player.OperationCallback>();
-    private final ArrayList<Runnable> logoutCallbacks = new ArrayList<Runnable>();
+    private Player.OperationCallback loginCallback = null;
+    private Runnable logoutCallback = null;
 
     @Override
     public void onConnectionMessage(String message) {
@@ -24,44 +24,38 @@ class ConnectionEventsHandler extends Emitter
 
     @Override
     public void onLoggedIn() {
-        for (Player.OperationCallback item : this.loginCallbacks) {
-            if (item != null) {
-                item.onSuccess();
-            }
+        if (this.loginCallback != null) {
+            this.loginCallback.onSuccess();
+            this.loginCallback = null;
         }
-        loginCallbacks.clear();
 
         this.emit("loggedin");
     }
 
     public void onLoggedIn(Player.OperationCallback runnable) {
-        this.loginCallbacks.add(runnable);
+        this.loginCallback = runnable;
     }
 
     @Override
     public void onLoggedOut() {
-        for (Runnable item : this.logoutCallbacks) {
-            if (item != null) {
-                item.run();
-            }
+        if (this.logoutCallback != null) {
+            this.logoutCallback.run();
+            this.logoutCallback = null;
         }
-        logoutCallbacks.clear();
 
         this.emit("loggedout");
     }
 
     public void onLoggedOut(Runnable runnable) {
-        this.logoutCallbacks.add(runnable);
+        this.logoutCallback = runnable;
     }
 
     @Override
     public void onLoginFailed(Error error) {
-        for (Player.OperationCallback item : this.loginCallbacks) {
-            if (item != null) {
-                item.onError(error);
-            }
+        if (this.loginCallback != null) {
+            this.loginCallback.onError(error);
+            this.loginCallback = null;
         }
-        loginCallbacks.clear();
 
         this.emit("loginfailed", error);
     }
