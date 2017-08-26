@@ -53,6 +53,7 @@
     if (!success) {
         self.currentClientId = nil;
         self.player.delegate = nil;
+        self.player.diskCache = nil;
         self.player.playbackDelegate = nil;
         self.player = nil;
 
@@ -73,6 +74,7 @@
     self.currentClientId = clientId;
     self.player = [SPTAudioStreamingController sharedInstance];
     self.player.delegate = self.audioStreamingDelegate;
+    self.player.diskCache = self.cache;
     self.player.playbackDelegate = self.audioStreamingPlaybackDelegate;
 
     [self loginAndPlay: accessToken
