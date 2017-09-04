@@ -1,4 +1,4 @@
-# Cordova Spotify SDK Plugin (Beta)
+# Cordova Spotify SDK Plugin
 
 [![Greenkeeper badge](https://badges.greenkeeper.io/Festify/cordova-spotify.svg)](https://greenkeeper.io/)
 
@@ -9,10 +9,6 @@ An [Apache Cordova](https://cordova.apache.org/) plugin providing access to the 
 ## Features
 
 This plugin provides a very simple and atomic layer over playback functionality of the Spotify SDK. It allows you to play Spotify tracks via their URI. Metadata and authentication functionality has deliberately been left out in favor of the [Web API](https://developer.spotify.com/web-api/) and other authentication solutions.
-
-## Stability
-
-This plugin is currently in beta. This means its reasonably stable but hasn't seen much production use yet. This plugin will be used in the new [Festify](https://github.com/Festify/app), so it will be production-ready once Festify is released. We will fix bugs as soon as we find them.
 
 ## Contributing
 
