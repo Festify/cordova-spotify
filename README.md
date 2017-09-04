@@ -10,10 +10,6 @@ An [Apache Cordova](https://cordova.apache.org/) plugin providing access to the 
 
 This plugin provides a very simple and atomic layer over playback functionality of the Spotify SDK. It allows you to play Spotify tracks via their URI. Metadata and authentication functionality has deliberately been left out in favor of the [Web API](https://developer.spotify.com/web-api/) and other authentication solutions.
 
-## Contributing
-
-Pull requests are very welcome! Please use the [gitmoji](https://gitmoji.carloscuesta.me/) style for commit messages.
-
 ## Installation
 
 ```bash
@@ -21,6 +17,10 @@ cordova plugin add cordova-spotify
 ```
 
 Note: Make sure your installation path doesn't contain any spaces.
+
+## Contributing
+
+Pull requests are very welcome! Please use the [gitmoji](https://gitmoji.carloscuesta.me/) style for commit messages.
 
 ## <a name="api-docs"></a>API Documentation
 
