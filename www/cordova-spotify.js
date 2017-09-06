@@ -60,7 +60,7 @@ export function getEventEmitter() {
             // with the native code. The subsequent ones are actual events.
             if (!emitterRegistered) {
                 emitterRegistered = true;
-                resolve(this);
+                resolve(emitter);
             } else {
                 setTimeout(() => emitter.emit(event.name, ...(event.args || [])));
             }

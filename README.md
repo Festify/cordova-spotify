@@ -1,4 +1,4 @@
-# Cordova Spotify SDK Plugin (Beta)
+# Cordova Spotify SDK Plugin
 
 [![Greenkeeper badge](https://badges.greenkeeper.io/Festify/cordova-spotify.svg)](https://greenkeeper.io/)
 
@@ -8,15 +8,7 @@ An [Apache Cordova](https://cordova.apache.org/) plugin providing access to the 
 
 ## Features
 
-This plugin provides a very simple and atomic layer over playback functionality of the Spotify SDK. It allows you to play Spotify tracks via their URI. Metadata and authentication functionality has deliberately been left out in favor of the [Web API](https://developer.spotify.com/web-api/) and other authentication solutions.
-
-## Stability
-
-This plugin is currently in beta. This means its reasonably stable but hasn't seen much production use yet. This plugin will be used in the new [Festify](https://github.com/Festify/app), so it will be production-ready once Festify is released. We will fix bugs as soon as we find them.
-
-## Contributing
-
-Pull requests are very welcome! Please use the [gitmoji](https://gitmoji.carloscuesta.me/) style for commit messages.
+This plugin provides a very simple and atomic layer over playback functionality of the Spotify SDK. It allows you to play Spotify tracks via their URI. Metadata and authentication functionality has deliberately been left out in favor of the [Web API](https://developer.spotify.com/web-api/) and our Spotify OAuth 2 plugin [cordova-spotify-oauth](https://github.com/Festify/cordova-spotify-oauth).
 
 ## Installation
 
@@ -25,6 +17,10 @@ cordova plugin add cordova-spotify
 ```
 
 Note: Make sure your installation path doesn't contain any spaces.
+
+## Contributing
+
+Pull requests are very welcome! Please use the [gitmoji](https://gitmoji.carloscuesta.me/) style for commit messages.
 
 ## <a name="api-docs"></a>API Documentation
 
@@ -65,7 +61,7 @@ Plays the track with the given Spotify URI.
 
 - `trackUri`: The Spotify URI of the track to play. E.g. `spotify:track:6nTiIhLmQ3FWhvrGafw2z`. May not be null.
 - `authOptions`: An object containing two keys:
-    - `token: string`: A valid Spotify access token with the `streaming` scope. May not be null.
+    - `token: string`: A valid Spotify access token with the `streaming` scope. May not be null. You can use the [cordova-spotify-oauth](https://github.com/Festify/cordova-spotify-oauth) plugin for authentication.
     - `clientId: string`: Your application's client ID as obtained from https://developer.spotify.com. May not be null.
 - `position`: Optional. The position (in _milliseconds_) to start playing the track from. Must be >= 0.
 

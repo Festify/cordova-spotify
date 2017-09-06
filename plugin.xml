@@ -19,12 +19,6 @@
             </feature>
         </config-file>
 
-        <config-file target="AndroidManifest.xml" parent="/manifest/application">
-            <activity
-                android:name="com.spotify.sdk.android.authentication.LoginActivity"
-                android:theme="@android:style/Theme.Translucent.NoTitleBar" />
-        </config-file>
-
         <source-file src="src/android/ConnectionEventsHandler.java" target-dir="src/rocks/festify" />
         <source-file src="src/android/CordovaSpotify.java" target-dir="src/rocks/festify" />
         <source-file src="src/android/Emitter.java" target-dir="src/rocks/festify" />
