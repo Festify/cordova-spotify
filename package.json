@@ -26,7 +26,7 @@
     "Leo Bernard <admin@leolabs.org>",
     "Marcus Weiner <melodie124@gmail.com>"
   ],
-  "license": "LGPL-3.0",
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/Festify/cordova-spotify/issues",
     "email": "mail+cordova-spotify@festify.rocks"
