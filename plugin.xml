@@ -4,7 +4,7 @@
 
     <hook type="before_plugin_install" src="package.sh" />
 
-    <js-module name="cordova-spotify" src="www/build/cordova-spotify.js">
+    <js-module name="cordova-spotify" src="www/build/cordova-spotify.min.js">
         <merges target="cordova.plugins" />
     </js-module>
 

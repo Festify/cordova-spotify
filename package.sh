@@ -9,4 +9,4 @@ else
     npm install
 fi
 
-./node_modules/.bin/webpack -p
+npm run build

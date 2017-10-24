@@ -1,0 +1,22 @@
+language: node_js
+cache: yarn
+node_js: node
+
+before_install: cd www
+install: yarn
+script: yarn run build
+before_deploy: cd ..
+
+deploy:
+  - provider: pages
+    skip_cleanup: true
+    github_token: $GITHUB_TOKEN
+    local_dir: www/build/docs
+    on:
+      branch: master
+  - provider: npm
+    email: $NPM_DPL_EMAIL
+    api_key: $NPM_DPL_TOKEN
+    tag: next
+    on:
+      tags: true
