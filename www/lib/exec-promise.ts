@@ -14,18 +14,28 @@ const q = queue(({ methodName, args }, cb) => {
     )
 });
 
-export default function(methodName, args) {
+/**
+ * Cordova's exec with Promise and error handling support.
+ *
+ * @param methodName the native method to execute
+ * @param args method arguments
+ * @hidden
+ */
+export default function<T>(methodName: string, args: any[] = []): Promise<T> {
     if (!methodName) {
         throw new Error("Missing method or class name argument (1st).");
     }
 
-    return new Promise((res, rej) => q.push(
-        { methodName, args }, 
+    return new Promise<T>((res, rej) => q.push(
+        { methodName, args },
         (err, val) => err ? rej(err) : res(val)
     ))
-        .catch(({ type, msg }) => {
-            const e = new Error(msg);
-            e.name = type;
-            return Promise.reject(e);
+        .catch(err => {
+            if (err) {
+                const e = new Error(err.msg);
+                e.name = err.type;
+                return Promise.reject(e);
+            }
+            return Promise.reject(err);
         });
 }

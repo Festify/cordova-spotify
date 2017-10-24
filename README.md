@@ -1,10 +1,10 @@
 # Cordova Spotify SDK Plugin
 
-[![Greenkeeper badge](https://badges.greenkeeper.io/Festify/cordova-spotify.svg)](https://greenkeeper.io/)
+[![Greenkeeper badge](https://badges.greenkeeper.io/Festify/cordova-spotify.svg)](https://greenkeeper.io/) [![Travis](https://img.shields.io/travis/Festify/cordova-spotify.svg)](https://travis-ci.org/Festify/cordova-spotify)
 
 An [Apache Cordova](https://cordova.apache.org/) plugin providing access to the Spotify SDK for iOS and Android.
 
-[API documentation](#api-docs)
+[API documentation](https://festify.github.io/cordova-spotify/)
 
 ## Features
 
@@ -21,64 +21,3 @@ Note: Make sure your installation path doesn't contain any spaces.
 ## Contributing
 
 Pull requests are very welcome! Please use the [gitmoji](https://gitmoji.carloscuesta.me/) style for commit messages.
-
-## <a name="api-docs"></a>API Documentation
-
-### General 
-
-The plugin has an extremely simple API that is focused just on playback. It consists of six functions clobbered onto `cordova.plugins.spotify`. In the following, treat all paths relative to that. The plugin handles all internal state and SDK initialization aspects automatically and hides these aspects from the developer.
-
-All functions are asynchronous and return promises (due to the way the Cordova <-> native code bridge works). The plugin automatically polyfills promise support through `es6-promise-plugin`.
-
-If any of the function parameters have invalid values, an appropriate `Error` will be thrown immediately instead of returning a rejected promise. This is because invalid arguments are bugs and not runtime errors.
-
-### `getEventEmitter(): Promise<EventEmitter>`
-
-Obtains an event emitter that relays the events fired by the native SDKs. The emitter will be created once and then returned on subsequent invocations.
-
-The emitter implementation comes from [eventemitter3](https://github.com/primus/eventemitter3). See their Github page for more information.
-
-The events emitted are the following:
-- `connectionmessage`
-- `loggedin`
-- `loggedout`
-- `loginfailed`
-- `playbackerror`
-- `playbackevent`
-- `temporaryerror`
-
-In the case of `loginfailed`, `playbackevent` and `playbackerror`, the event contains a payload that describes what happened exactly. The payload is simply the name of the discriminant of the enum in the native SDK without the prefix (usually `kSp` or `kSpError`). See the offical documentation [here](https://spotify.github.io/android-sdk/player/com/spotify/sdk/android/player/Error.html) and [here](https://spotify.github.io/android-sdk/player/com/spotify/sdk/android/player/PlayerEvent.html) for all variants.
-
-### `getPosition(): Promise<number>`
-
-Obtains the players position in _milliseconds_. If no track is currently loaded, returns 0.
-
-### `play(trackUri: string, authOptions: object[, position: number]): Promise`
-
-Plays the track with the given Spotify URI.
-
-#### Parameters
-
-- `trackUri`: The Spotify URI of the track to play. E.g. `spotify:track:6nTiIhLmQ3FWhvrGafw2z`. May not be null.
-- `authOptions`: An object containing two keys:
-    - `token: string`: A valid Spotify access token with the `streaming` scope. May not be null. You can use the [cordova-spotify-oauth](https://github.com/Festify/cordova-spotify-oauth) plugin for authentication.
-    - `clientId: string`: Your application's client ID as obtained from https://developer.spotify.com. May not be null.
-- `position`: Optional. The position (in _milliseconds_) to start playing the track from. Must be >= 0.
-
-`token` and `clientId` may change freely during runtime. The plugin will handle the required login / logout processes automatically when a new track is played.
-
-### `pause(): Promise`
-
-Pauses playback. If no track is loaded, returns normally.
-
-### `resume(): Promise`
-
-Resumes playback. If no track is loaded, the returned promise will be rejected with an error of type `not_playing`.
-
-### `seekTo(position: number): Promise`
-
-Sets the playback position to the given value. If no track is loaded, the returned promise will be rejected with an error of type `not_playing`.
-
-#### Parameters
-
-- `position`: The position (in _milliseconds_) to seek to. Must be >= 0.
