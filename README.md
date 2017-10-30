@@ -24,7 +24,6 @@ The plugin is very simple to use. All methods can be called at any time and ther
 
 ### Play some good music
 ```js
-// 
 cordova.plugins.spotify.play("spotify:track:0It6VJoMAare1zdV2wxqZq", { 
   clientId: "<YOUR SPOTIFY CLIENT ID",
   token: "<YOUR VALID SPOTIFY ACCESS TOKEN WITH STREAMING SCOPE>"
