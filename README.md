@@ -41,7 +41,7 @@ cordova.plugins.spotify.pause()
 ```js
 cordova.plugins.spotify.getPosition()
   .then(pos => console.log(`We're currently ${pos}ms into the track.`))
-  .catch(() => console.log("Whoops, no track is playing right now.");
+  .catch(() => console.log("Whoops, no track is playing right now."));
 ```
 
 ## Contributing
