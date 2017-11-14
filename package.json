@@ -1,6 +1,6 @@
 {
   "name": "cordova-spotify",
-  "version": "0.5.5",
+  "version": "0.5.6",
   "description": "Spotify SDK bindings for Cordova Applications",
   "repository": {
     "type": "git",
