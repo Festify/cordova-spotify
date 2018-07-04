@@ -44,6 +44,24 @@ cordova.plugins.spotify.getPosition()
   .catch(() => console.log("Whoops, no track is playing right now."));
 ```
 
+### React to events from native SKDs
+```js
+cordova.plugins.spotify.getEventEmitter()
+  .then(emitter => emitter.on('playbackevent', eventName => {
+    switch (eventName) {
+      case 'PlaybackNotifyPlay':
+        console.log("Playback was started");
+         break;
+      case 'PlaybackNotifyPause':
+        console.log("Playback was paused");
+        break;
+      default:
+        console.log("Some other event was raised:", eventName);
+        break;
+    }
+  }))
+```
+
 ## Contributing
 
 Pull requests are very welcome! Please use the [gitmoji](https://gitmoji.carloscuesta.me/) style for commit messages.
