@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 SDK_INSTALL_PATH="plugins/cordova-spotify/src/android/spotify-sdk"
-SDK_DOWNLOAD_PATH="https://github.com/spotify/android-sdk/archive/24-noconnect-2.20b.tar.gz"
+SDK_DOWNLOAD_PATH="https://github.com/spotify/android-streaming-sdk/archive/24-noconnect-2.20b.tar.gz"
 
 if [ ! -d "$SDK_INSTALL_PATH" ]; then
     mkdir -p "$SDK_INSTALL_PATH"
