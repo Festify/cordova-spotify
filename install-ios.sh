@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 INSTALL_PATH="plugins/cordova-spotify/src/ios/spotify-sdk"
-DOWNLOAD_PATH="https://github.com/spotify/ios-streaming-sdk/archive/beta-25.tar.gz"
+DOWNLOAD_PATH="https://github.com/spotify/ios-streaming-sdk/archive/beta-27.tar.gz"
 
 if [ ! -d $INSTALL_PATH ]; then
     mkdir -p $INSTALL_PATH
